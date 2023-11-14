@@ -1,0 +1,188 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-15 22:12+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: pick-pack-public-popup.php:33
+msgid "Do you want a PickPack reusable package?"
+msgstr ""
+
+#: pick-pack-public-popup.php:35
+#, php-format
+msgid ""
+"As a thank you for using the PickPack service, the online store where you "
+"are shopping will offer you 10% off your next order*."
+msgstr ""
+
+#: pick-pack-public-popup.php:46
+msgid ""
+"The PickPack option allows you to reduce your environmental footprint by "
+"returning your packaging after receiving your package."
+msgstr ""
+
+#: pick-pack-public-popup.php:48
+msgid "TRULY be part of the environmental solution for only $3.99."
+msgstr ""
+
+#: pick-pack-public-popup.php:50
+msgid "The return is FREE and SIMPLE."
+msgstr ""
+
+#: pick-pack-public-popup.php:52
+msgid "See the return procedure (Collaboration with Canada Post)"
+msgstr ""
+
+#: pick-pack-public-popup.php:61
+msgid "My order will be delivered in Canada"
+msgstr ""
+
+#: pick-pack-public-popup.php:66
+msgid "Yes, I want to make a difference."
+msgstr ""
+
+#: pick-pack-public-popup.php:68
+msgid "No thank you"
+msgstr ""
+
+#: pick-pack-public-popup.php:70
+msgid "Initiative powered by PickPack"
+msgstr ""
+
+#: pick-pack-public-popup.php:72
+msgid ""
+"CONDITIONS : You must choose the PickPack option AND return your packaging "
+"as agreed."
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:21
+msgid "Pick Pack Integration"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:60
+msgid "Eco Bag Price: "
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:66
+#, php-format
+msgid "Number of points for %s"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:75
+msgid "Insert your token here that is used to add and update payment method"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:87
+msgid "Get Token from our server"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:90
+msgid "Go to Link"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:121
+msgid "Number of Eco Bags sold"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:126
+msgid "Large Products: "
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:133
+msgid "Fragile Products: "
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:142
+msgid "Set up Payment Details"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:146
+msgid "Register Payment Method"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:150
+msgid "Update Payment Details"
+msgstr ""
+
+#: partials/pick-pack-admin-integration.php:155
+msgid "Update Payment Method"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Alberta is 5%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in British Columbia is 12%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Manitoba is 13%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in New Brunswick is 13%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Newfoundland and Labrador is 13%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Northwest Territories is 5%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Nova Scotia is 15%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Nunavut is 5%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Ontario is 13%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Prince Edward Island is 14%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Quebec is 14.975%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Saskatchewan is 10%"
+msgstr ""
+
+#: class-pick-pack-public.php:115
+msgid "Tax rate in Yukon Territory is 5%"
+msgstr ""
+
+#: class-pick-pack-public.php:145
+#, php-format
+msgid "%s is a fragile product"
+msgstr ""
+
+#: class-pick-pack-public.php:149
+#, php-format
+msgid "%s is a large product"
+msgstr ""
+
+#: class-pick-pack-public.php:641
+msgid "Pick Pack bag option only available in Canada"
+msgstr ""
