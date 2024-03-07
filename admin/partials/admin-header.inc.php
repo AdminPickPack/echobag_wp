@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) exit;
                 <a href="<?php esc_attr_e(admin_url('/admin.php?page=pickpack')) ?>"><?php esc_html_e('Dashboard', 'pick-pack'); ?></a>
             </li>
             <li>
-                <a href="<?php esc_attr_e(admin_url('/edit.php?post_type=pickpack_orders')) ?>"><?php esc_html_e('Orders', 'pick-pack'); ?></a>
+                <a href="<?php esc_attr_e(admin_url('/admin.php?page=pickpack_orders')) ?>"><?php esc_html_e('Orders', 'pick-pack'); ?></a>
             </li>
             <li>
                 <a href="<?php esc_attr_e(admin_url('/admin.php?page=pickpack_settings')) ?>"><?php esc_html_e('Settings', 'pick-pack'); ?></a>

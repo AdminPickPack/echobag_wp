@@ -1,7 +1,9 @@
+/* Wordpress menu icon */
 .toplevel_page_pickpack img {
     width: 20px;
 }
-    
+
+/* Admin header */
 #pick-pack-admin .navbar {
     display: flex;
     flex-direction: row;
@@ -14,26 +16,22 @@
     margin: 0;
     margin-top: 1rem;
 }
-
 #pick-pack-admin .navbar .brand img {
     width: 42px;
     height: 42px;
     background-color: #FCFAED;
     border-radius: 50%;
 }
-
 #pick-pack-admin .navbar a {
     color: #fff;
     text-decoration: none;
 }
-
 #pick-pack-admin .navbar a:hover,
 #pick-pack-admin .navbar a:focus,
 #pick-pack-admin .navbar a:active
 {
     text-decoration: underline;
 }
-
 #pick-pack-admin .navbar ul {
     display: flex;
     flex-direction: row;
@@ -41,7 +39,6 @@
     align-items: center;
     justify-content: flex-start;
 }
-
 #pick-pack-admin .navbar li {
     display: inline;
     padding: .25rem .5rem;
@@ -50,73 +47,61 @@
     font-weight: 600;
     color: #fff;
 }
-
-#pick-pack-admin .card {
-    width: 100%;
-    min-width: 100%;
-}
-
 @media (max-width: 575.98px) {
     #pick-pack-admin .navbar li {
         font-size: 1rem;
     }
 }
 
+/* Admin content */
 #pick-pack-admin .container {
     background-color: #f6f6f7;
     margin: 0;
     padding: 1rem;
 }
-
 #pick-pack-admin .page-title {
     font-size: 1.5rem;
     line-height: 1.75rem;
     margin-top: .25rem;
 }
-
 #pick-pack-admin hr {
     margin-top: 1rem;
     margin-bottom: 1rem;
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-
+#pick-pack-admin .card {
+    width: 100%;
+    min-width: 100%;
+}
 #pick-pack-admin .form-table th p {
     font-weight: 400;
 }
-
 #pick-pack-admin .form-table label {
     font-weight: 600;
 }
-
 #pick-pack-admin .form-table .card {
     margin: 0;
 }
-
 #pick-pack-admin .form-table .card > div {
     margin: 1rem 0;
 }
-
 #pick-pack-admin .form-table input,
 #pick-pack-admin .form-table select {
     border-radius: 0;
     border: 1px solid #dcdcde;
 }
-
 #pick-pack-admin .form-table input[type="text"] {
     width: 100%;
 }
-
 #pick-pack-admin .form-table input[type="number"] {
     width: 90px;
 }
-
 #pick-pack-admin .form-table textarea {
     width: 100%;
     border-radius: 0;
     border: 1px solid #dcdcde;
 }
-
 #pick-pack-admin .form-controls {
     display: flex;
     flex-direction: row;
@@ -125,7 +110,6 @@
     justify-content: flex-end;
     margin-bottom: 0;
 }
-
 #pick-pack-admin .form-buttons {
     display: flex;
     flex-direction: row;
@@ -134,7 +118,6 @@
     justify-content: flex-end;
     text-align: right;
 }
-
 #pick-pack-admin .form-buttons .btn {
     border: 0;
     background-color: #f0f0f0;
@@ -151,7 +134,6 @@
 {
     background-color: #cccccc;
 }
-
 #pick-pack-admin .form-buttons .btn-primary {
     background-color: #719c84;
     color: #fff;
@@ -162,11 +144,9 @@
 {
     background-color: #5a7c69;
 }
-
 #pick-pack-admin .form-buttons .btn:disabled {
     background-color: #808080;
 }
-
 #pick-pack-admin .ajax-status {
     display: flex;
     flex-direction: row;
@@ -175,11 +155,111 @@
     text-align: right;
     flex-grow: 1;
 }
-
 #pick-pack-admin .ajax-status .success {
     color: #0a875a;
 }
-
 #pick-pack-admin .ajax-status .error {
     color: #b21d1d;
+}
+
+/* Admin dashboard */
+#pickpack-dashboard {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+#pickpack-dashboard .dashboard-item {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+#pickpack-dashboard .dashboard-item-title {
+    font-size: .85rem;
+    line-height: 1.5;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#pickpack-dashboard .dashboard-item-value {
+    font-size: 1.5rem;
+    line-height: 1.5;
+}
+#pickpack-dashboard .dashboard-item-value span {
+    color: #6c757d;
+    font-size: 1.15rem;
+}
+#pickpack-dashboard .dashboard-welcome {
+    background-color: #d1dfca;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-top: 3rem;
+    padding: 12px 20px;
+    border-radius: .125rem;
+}
+#pickpack-dashboard .dashboard-welcome-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+#pickpack-dashboard .dashboard-welcome-text {
+    font-size: 1rem;
+}
+#pickpack-dashboard .dashboard-left,
+#pickpack-dashboard .dashboard-right {
+    flex-basis: calc(50% - 1rem);
+    flex-grow: 1;
+    min-width: 315px;
+}
+#pickpack-dashboard .dashboard-left .dashboard-stats {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1rem;
+}
+#pickpack-dashboard .dashboard-left .dashboard-item {
+    flex-basis: calc(50% - .5rem);
+    min-width: 175px;
+}
+#pickpack-dashboard .dashboard-right {
+    display: flex;
+}
+#pickpack-dashboard .dashboard-right .card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+#pickpack-dashboard .dashboard-right .card .dashboard-item {
+    padding: 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+#pickpack-dashboard .dashboard-right .card .dashboard-item:last-child {
+    border-bottom: 0;
+}
+
+/* Admin orders list */
+.pick-pack_page_pickpack_orders .tablenav.top {
+    display: none;
+}
+.pick-pack_page_pickpack_orders .search-box {
+    margin-bottom: .75rem;
+}
+.pick-pack_page_pickpack_orders .wp-list-table .column-order {
+    width: auto !important;
+    white-space: nowrap;
+}
+.pick-pack_page_pickpack_orders .wp-list-table .column-date {
+    width: 150px !important;
+    white-space: nowrap;
+}
+.pick-pack_page_pickpack_orders .column-quantity,
+.pick-pack_page_pickpack_orders .column-price,
+.pick-pack_page_pickpack_orders .column-total {
+    width: 150px;
+    text-align: right;
+    white-space: nowrap;
+}
+.pick-pack_page_pickpack_orders .column-quantity a span,
+.pick-pack_page_pickpack_orders .column-price a span,
+.pick-pack_page_pickpack_orders .column-total a span {
+    float: right;
 }

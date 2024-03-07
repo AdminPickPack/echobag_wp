@@ -105,13 +105,15 @@ class Pick_Pack_Admin
 	    array($this, 'display_dashboard'),
 	);
 
-        add_submenu_page(
+        $orders_page = add_submenu_page(
             'pickpack',
 	    __('Pick Pack Orders', 'pick-pack'),
 	    __('Orders', 'pick-pack'),
 	    'manage_options',
-	    'edit.php?post_type=pickpack_orders'
+            'pickpack_orders',
+	    array($this, 'display_orders'),
 	);
+	add_action("load-{$orders_page}", array($this, 'display_orders_screen_options'));
 
         add_submenu_page(
             'pickpack', 
@@ -148,6 +150,27 @@ class Pick_Pack_Admin
 	include_once plugin_dir_path(__FILE__) . 'partials/admin-header.inc.php';
 	include_once plugin_dir_path(__FILE__) . 'partials/admin-settings.inc.php';
 	include_once plugin_dir_path(__FILE__) . 'partials/admin-footer.inc.php';
+    }
+
+    /**
+     * Display pick pack orders page.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function display_orders()
+    {
+	include_once plugin_dir_path(__FILE__) . 'partials/admin-header.inc.php';
+	include_once plugin_dir_path(__FILE__) . 'partials/admin-orders.inc.php';
+	include_once plugin_dir_path(__FILE__) . 'partials/admin-footer.inc.php';
+    }
+    
+    public function display_orders_screen_options()
+    {
+	add_filter( 'set_screen_option_pickpack_orders_per_page', function($default, $option, $value) { return $value; }, 10, 3);
+	add_screen_option('per_page', array( 'label' => __('Orders per page', 'pick-pack'),
+					     'default' => 10,
+					     'option' => 'pickpack_orders_per_page' ));
     }
     
     /**
@@ -229,6 +252,7 @@ class Pick_Pack_Admin
 	    <div class="form-field">
 	        <label for="pick_pack_product_type"><?php esc_html_e('Pick Pack Products Type', 'pick-pack'); ?></label>
 	        <select name="pick_pack_product_type" id="pick_pack_product_type" class="postform">
+	            <option value="default"><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
 	            <option value="enable"><?php esc_html_e("Pick Pack Enabled", 'pick-pack'); ?></option>
 	            <option value="fragile"><?php esc_html_e("Fragile Products", 'pick-pack'); ?></option>
 	            <option value="large"><?php esc_html_e("Large Products", 'pick-pack'); ?></option>
@@ -239,7 +263,7 @@ class Pick_Pack_Admin
 	    <div class="form-field">
 	        <label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'your-textdomain'); ?></label>
         	<select name="pick_pack_product_points" id="pick_pack_product_points" class="postform" required>
-	            <option value=""><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
+	            <option value="default"><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
 	            <option value="1"><?php esc_html_e("1 point (small products)", 'pick-pack'); ?></option>
 	            <option value="2"><?php esc_html_e("2 points", 'pick-pack'); ?></option>
 	            <option value="3"><?php esc_html_e("3 points", 'pick-pack'); ?></option>
@@ -283,6 +307,7 @@ class Pick_Pack_Admin
 	        <th scope="row" valign="top"><label for="pick_pack_product_type"><?php esc_html_e('Pick Pack Products Type', 'pick-pack'); ?></label></th>
 		<td>
 	            <select name="pick_pack_product_type" id="pick_pack_product_type" class="postform">
+	                <option value="default" <?php selected($product_type, 'default'); ?>><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
 	                <option value="enable" <?php selected($product_type, 'enable'); ?>><?php esc_html_e("Pick Pack Enabled", 'pick-pack'); ?></option>
 	                <option value="fragile" <?php selected($product_type, 'fragile'); ?>><?php esc_html_e("Fragile Products", 'pick-pack'); ?></option>
 	                <option value="large" <?php selected($product_type, 'large'); ?>><?php esc_html_e("Large Products", 'pick-pack'); ?></option>
@@ -335,42 +360,47 @@ class Pick_Pack_Admin
 	add_filter('manage_edit-product_cat_columns', function($columns) {
 	    $columns['pick_pack'] = __("Pick Pack", 'pick-pack');
 	    return $columns;
-	});
+	}, 10, 1);
+	add_action('manage_product_cat_custom_column', array($this, 'show_custom_wc_category_column'), 10, 3);
+    }
 	
-	add_filter('manage_product_cat_custom_column', function($content, $column_name, $term_id) {
-	    if ($column_name == 'pick_pack') {
-		$product_type = get_term_meta($term_id, 'pick_pack_product_type', true);
-		if (empty($product_type)) { $product_type = 'default'; }
-		
-		$product_points = get_term_meta($term_id, 'pick_pack_product_points', true);
-		if (empty($product_points)) { $product_points = 'default'; }
-		
-		$content = '';
-		switch ($product_type) {
-		 default:
-		    $content = __('Default', 'pick-pack');
-		    break;
-		 case 'enable':
-		    $content = __('Enabled', 'pick-pack');
-		    break;
-		 case 'disable':
-		    $content = __('Disabled', 'pick-pack');
-		    break;
-		 case 'fragile':
-		    $content = __('Fragile Products', 'pick-pack');
-		    break;
-		 case 'large':
-		    $content = __('Large Products', 'pick-pack');
-		    break;
-		}
-		
-		if ($product_points != 'default' && in_array($product_type, array('', 'default', 'enable'))) {
-		    $product_points = intval($product_points);
-		    $content .= sprintf( _n(' (%d point)', ' (%d points)', $product_points, 'pick-pack'), $product_points);
-		}
+    /**
+     * Show custom woocommerce category column for pickpack.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function show_custom_wc_category_column($content, $column_name, $term_id) {
+	if ($column_name == 'pick_pack') {
+	    $product_options = $this->get_wc_category_pickpack_options($term_id);
+	    $product_type = $product_options['product_type'];
+	    $product_points = $product_options['product_points'];
+	    
+	    $content = '';
+	    switch ($product_type) {
+	     default:
+		$content = __('Default', 'pick-pack');
+		break;
+	     case 'enable':
+		$content = __('Enabled', 'pick-pack');
+		break;
+	     case 'disable':
+		$content = __('Disabled', 'pick-pack');
+		break;
+	     case 'fragile':
+		$content = __('Fragile Products', 'pick-pack');
+		break;
+	     case 'large':
+		$content = __('Large Products', 'pick-pack');
+		break;
 	    }
-	    return $content;
-	}, 5, 3);
+	    
+	    if ($product_points != 'default' && in_array($product_type, array('', 'default', 'enable'))) {
+		$product_points = intval($product_points);
+		$content .= sprintf( _n(' (%d point)', ' (%d points)', $product_points, 'pick-pack'), $product_points);
+	    }
+	}
+	return $content;
     }
 
     /**
@@ -452,48 +482,150 @@ class Pick_Pack_Admin
 	    update_post_meta($post_id, 'pick_pack_product_points', sanitize_text_field($product_points));
 	});
 	
-	// Display pick pack options in products list
-	add_filter('manage_edit-product_columns', 'add_custom_product_columns', 10, 1);
-	function add_custom_product_columns($columns) {
+	add_filter('manage_edit-product_columns', function($columns) {
 	    $columns['pick_pack'] = __('Pick Pack', 'pick-pack');
 	    return $columns;
+	}, 10, 1);
+	add_action('manage_product_posts_custom_column', array($this, 'show_custom_wc_product_column'), 10, 2);
+    }
+
+    /**
+     * Show custom woocommerce product column for pickpack.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function show_custom_wc_product_column($column, $post_id) {
+	if ($column == 'pick_pack') {
+	    $product_options = $this->get_wc_product_pickpack_options($post_id);
+	    $product_type = $product_options['product_type'];
+	    $product_points = $product_options['product_points'];
+	    
+	    $content = '';
+	    switch ($product_type) {
+	     default:
+		$content = __('Default', 'pick-pack');
+		break;
+	     case 'enable':
+		$content = __('Enabled', 'pick-pack');
+		break;
+	     case 'disable':
+		$content = __('Disabled', 'pick-pack');
+		break;
+	     case 'fragile':
+		$content = __('Fragile Product', 'pick-pack');
+		break;
+	     case 'large':
+		$content = __('Large Product', 'pick-pack');
+		break;
+	    }
+	    
+	    if ($product_points != 'default' && in_array($product_type, array('', 'default', 'enable'))) {
+		$product_points = intval($product_points);
+		$content .= sprintf( _n(' (%d point)', ' (%d points)', $product_points, 'pick-pack'), $product_points);
+	    }
+	    echo $content;
+	}
+    }
+    
+    /**
+     * Get default pick pack options.
+     *
+     * @since 1.0.0
+     * @return array The pick pack options.
+     */
+    private function get_default_pickpack_options() {
+	static $options;
+	if (!empty($options)) {
+	    return $options;
 	}
 	
-	add_action('manage_product_posts_custom_column', 'show_custom_product_columns', 10, 2);
-	function show_custom_product_columns($column, $post_id) {
-	    if ($column == 'pick_pack') {
-		$product_type = get_post_meta($post_id, 'pick_pack_product_type', true);
-		if (empty($product_type)) { $product_type = 'default'; }
-		
-		$product_points = get_post_meta($post_id, 'pick_pack_product_points', true);
-		if (empty($product_points)) { $product_points = 'default'; }
+	$is_exclusive = get_option('pick_pack_product_exclusive', false);
+	
+	$product_type = $is_exclusive ? 'disable': 'enable';
+	$product_points = get_option('pick_pack_product_default_points', PICK_PACK_DEFAULT_PRODUCT_POINTS);
+	
+	$options = array( 'product_type' => $product_type,
+			  'product_points' => $product_points );
+	return $options;
+    }
+    
+    /**
+     * Get category pick pack options.
+     *
+     * @since 1.0.0
+     * @return array The pick pack options.
+     */
+    private function get_wc_category_pickpack_options($category_id) {
+	static $options = array();
+	if (!empty($options[$category_id])) {
+	    return $options[$category_id];
+	}
+	
+	$default_options = $this->get_default_pickpack_options();
+	
+	$product_type = get_term_meta($category_id, 'pick_pack_product_type', true);
+	if (empty($product_type) || $product_type == 'default') {
+	    $product_type = $default_options['product_type'];
+	}
+	
+	$product_points = get_term_meta($category_id, 'pick_pack_product_points', true);
+	if (empty($product_points) || $product_points == 'default') {
+	    $product_points = $default_options['product_points'];
+	}
+	
+	$options[$category_id] = array( 'product_type' => $product_type,
+					'product_points' => $product_points );
+	return $options[$category_id];
+    }
 
-		$content = '';
-		switch ($product_type) {
-		 default:
-		    $content = __('Default', 'pick-pack');
-		    break;
-		 case 'enable':
-		    $content = __('Enabled', 'pick-pack');
-		    break;
-		 case 'disable':
-		    $content = __('Disabled', 'pick-pack');
-		    break;
-		 case 'fragile':
-		    $content = __('Fragile Product', 'pick-pack');
-		    break;
-		 case 'large':
-		    $content = __('Large Product', 'pick-pack');
-		    break;
+    /**
+     * Get product pick pack options.
+     *
+     * @since 1.0.0
+     * @return array The pick pack options.
+     */
+    private function get_wc_product_pickpack_options($product_id) {
+	static $options = array();
+	if (!empty($options[$product_id])) {
+	    return $options[$product_id];
+	}
+	
+	$product_type = get_post_meta($product_id, 'pick_pack_product_type', true);
+	if (empty($product_type)) { $product_type = 'default'; }
+
+	$product_points = get_post_meta($product_id, 'pick_pack_product_points', true);
+	if (empty($product_points)) { $product_points = 'default'; }
+
+	if ($product_type == 'default' || $product_points == 'default') {
+	    $categories = get_the_terms($product_id, 'product_cat');
+	    if (!empty($categories) && !is_wp_error($categories)) {
+		foreach ($categories as $term) {
+		    $category_id = $term->term_id;
+		    $category_options = $this->get_wc_category_pickpack_options($category_id);
+		    if ($product_type == 'default') {
+			$product_type = $category_options['product_type'];
+		    }
+		    if ($product_points == 'default') {
+			$product_points = $category_options['product_points'];
+		    }
 		}
-		
-		if ($product_points != 'default' && in_array($product_type, array('', 'default', 'enable'))) {
-		    $product_points = intval($product_points);
-		    $content .= sprintf( _n(' (%d point)', ' (%d points)', $product_points, 'pick-pack'), $product_points);
-		}
-		echo $content;
 	    }
 	}
+
+	if ($product_type == 'default' || $product_points == 'default') {
+	    $default_options = $this->get_default_pickpack_options();
+	    if ($product_type == 'default') {
+		$product_type = $default_options['product_type'];
+	    }
+	    if ($product_points == 'default') {
+		$product_points = $default_options['product_points'];
+	    }
+	}
+	
+	$options[$product_id] = array( 'product_type' => $product_type,
+				       'product_points' => $product_points );
+	return $options[$product_id];
     }
     
     /**
@@ -523,9 +655,8 @@ class Pick_Pack_Admin
 	    $product->set_sku('Pick-Pack');
 	    $product->set_regular_price($product_price);
 	    $product->set_status('publish');
-	    $product->set_manage_stock(true);
-	    $product->set_stock_status($product_stock > 0 ? 'instock' : 'outofstock');
-	    $product->set_stock_quantity($product_stock);
+	    $product->set_manage_stock(false);
+	    $product->set_stock_status('instock');
 	    $product->set_catalog_visibility('hidden');
 	    
 	    $product_id = $product->save();
@@ -610,16 +741,36 @@ class Pick_Pack_Admin
      */
     public function custom_orders_post_type()
     {
-        register_post_type( 'pickpack_orders', array( 'labels' => array( 'name' => __('Pick Pack Orders', 'pick-pack'),
-									 'singular_name' => __('Pick Pack Order', 'pick-pack') ),
-						      'capability_type' => 'post',
-						      'supports' => array( '' ),
-						      'capabilities' => array( 'create_posts' => 'do_not_allow' ),
-						      'map_meta_cap' => true,
-						      'public' => true,
-						      'has_archive' => false,
-						      'rewrite' => array('slug' => 'pick-pack-orders'),
-						      'show_in_menu' => 'edit.php?post_type=pickpack_orders'  ) );
+	$labels = array( 'name' => __('Pick Pack Orders', 'pick-pack'),
+			 'singular_name' => __('Pick Pack Order', 'pick-pack') );
+	
+	$capabilities = array( 'create_posts'       => 'do_not_allow',
+			       'edit_posts'         => 'do_not_allow',
+			       'edit_others_posts'  => 'do_not_allow',
+			       'publish_posts'      => 'do_not_allow',
+			       'read_private_posts' => 'do_not_allow',
+			       
+			       'edit_post'          => 'do_not_allow',
+			       'read_post'          => 'do_not_allow',
+			       'delete_post'        => 'do_not_allow' );
+	
+	$args = array( 'label'    => __('Pick Pack Order', 'pick-pack'),
+		       'labels'   => $labels,
+		       'supports' => array(),
+		       'public'   => false,
+		       'show_ui'  => true,
+		       'show_in_menu' => 'edit.php?post_type=pickpack_orders',
+		       'show_in_admin_bar' => false,
+		       'show_in_nav_menus' => false,
+		       'show_in_rest' => false,
+		       'can_export' => false,
+		       'has_archive' => false,
+		       'exclude_from_search' => true,
+		       'publicly_queryable' => false,
+		       'capability_type' => 'post',
+		       'map_meta_cap' => false );
+	
+        register_post_type('pickpack_orders', $args);
     }
 
     /**
@@ -643,28 +794,19 @@ class Pick_Pack_Admin
     {
         if ($column_key == 'price') {
             $price = get_post_meta($post_id, 'price', true);
-
             if (!$price || $price == '') {
-                echo '<span style="color:red;">';
-                _e('Not available', 'pick-pack');
-                echo '</span>';
+                echo sprintf('<span style="color:red;">%s</span>', esc_html__('Not available', 'pick-pack'));
             } else {
-                echo '<span style="color:green;">';
-                esc_html($price);
-                echo '</span>';
+                echo sprintf('<span style="color:green;">%s</span>', esc_html($price));
             }
         }
 
         if ($column_key == 'pick_pack_bags_sold') {
             $eco_bags_sold = get_post_meta($post_id, 'quantity', true);
             if (!$eco_bags_sold || $eco_bags_sold == '') {
-                echo '<span style="color:red;">';
-                _e('Not available', 'pick-pack');
-                echo '</span>';
+                echo sprintf('<span style="color:red;">%s</span>', esc_html__('Not available', 'pick-pack'));
             } else {
-                echo '<span style="color:green;">';
-                esc_html($eco_bags_sold);
-                echo '</span>';
+                echo sprintf('<span style="color:green;">%s</span>', esc_html($eco_bags_sold));
             }
         }
     }
