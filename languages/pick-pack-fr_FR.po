@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 22:12+0500\n"
-"PO-Revision-Date: 2024-03-07 16:50+0000\n"
+"PO-Revision-Date: 2024-03-07 16:58+0000\n"
 "Last-Translator: Productions Lyne Sarrazin\n"
 "Language-Team: Français\n"
 "Language: fr_FR\n"
@@ -205,7 +205,7 @@ msgstr "Défaut"
 
 #: admin/class-pick-pack-admin.php:491 admin/class-pick-pack-admin.php:505
 msgid "Default (primary category value)"
-msgstr "Par défaut (valeur de catégorie principale)"
+msgstr "Par défaut (valeur de la catégorie principale)"
 
 #: admin/partials/admin-settings.inc.php:85
 msgid "Default Points for Products"
