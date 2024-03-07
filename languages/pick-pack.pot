@@ -2,13 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 22:12+0500\n"
+"POT-Creation-Date: 2024-03-07 15:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,173 +15,507 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Loco https://localise.biz/"
 
-#: pick-pack-public-popup.php:33
-msgid "Do you want a PickPack reusable package?"
+#: admin/partials/admin-dashboard.inc.php:97
+#: admin/partials/admin-dashboard.inc.php:106
+#: admin/partials/admin-dashboard.inc.php:115
+msgid "(%d bag)"
+msgid_plural "(%d bags)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-pick-pack-admin.php:400 admin/class-pick-pack-admin.php:525
+msgid "(%d point)"
+msgid_plural "(%d points)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: public/partials/popup.inc.php:45
+msgid "* Some products may not yet be eligible for PickPack delivery."
 msgstr ""
 
-#: pick-pack-public-popup.php:35
-#, php-format
+#: public/partials/popup.inc.php:64
+msgid "* You must choose the option AND return your packaging as agreed."
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:324 admin/class-pick-pack-admin.php:447
+msgid "1 point (small product)"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:267 admin/partials/admin-settings.inc.php:83
+msgid "1 point (small products)"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:276 admin/class-pick-pack-admin.php:333
+#: admin/class-pick-pack-admin.php:456 admin/partials/admin-settings.inc.php:92
+msgid "10 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:277 admin/class-pick-pack-admin.php:334
+#: admin/class-pick-pack-admin.php:457 admin/partials/admin-settings.inc.php:93
+msgid "11 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:278 admin/class-pick-pack-admin.php:335
+#: admin/class-pick-pack-admin.php:458 admin/partials/admin-settings.inc.php:94
+msgid "12 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:279 admin/class-pick-pack-admin.php:336
+#: admin/class-pick-pack-admin.php:459 admin/partials/admin-settings.inc.php:95
+msgid "13 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:280 admin/class-pick-pack-admin.php:337
+#: admin/class-pick-pack-admin.php:460 admin/partials/admin-settings.inc.php:96
+msgid "14 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:281 admin/class-pick-pack-admin.php:338
+#: admin/class-pick-pack-admin.php:461 admin/partials/admin-settings.inc.php:97
+msgid "15 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:282 admin/class-pick-pack-admin.php:339
+#: admin/class-pick-pack-admin.php:462 admin/partials/admin-settings.inc.php:98
+msgid "16 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:283 admin/class-pick-pack-admin.php:340
+#: admin/class-pick-pack-admin.php:463 admin/partials/admin-settings.inc.php:99
+msgid "17 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:284 admin/class-pick-pack-admin.php:341
+#: admin/class-pick-pack-admin.php:464
+#: admin/partials/admin-settings.inc.php:100
+msgid "18 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:285 admin/class-pick-pack-admin.php:342
+#: admin/class-pick-pack-admin.php:465
+#: admin/partials/admin-settings.inc.php:101
+msgid "19 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:268 admin/class-pick-pack-admin.php:325
+#: admin/class-pick-pack-admin.php:448 admin/partials/admin-settings.inc.php:84
+msgid "2 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:343 admin/class-pick-pack-admin.php:466
+msgid "20 points (large product)"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:286
+#: admin/partials/admin-settings.inc.php:102
+msgid "20 points (large products)"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:269 admin/class-pick-pack-admin.php:326
+#: admin/class-pick-pack-admin.php:449 admin/partials/admin-settings.inc.php:85
+msgid "3 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:270 admin/class-pick-pack-admin.php:327
+#: admin/class-pick-pack-admin.php:450 admin/partials/admin-settings.inc.php:86
+msgid "4 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:271 admin/class-pick-pack-admin.php:328
+#: admin/class-pick-pack-admin.php:451 admin/partials/admin-settings.inc.php:87
+msgid "5 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:272 admin/class-pick-pack-admin.php:329
+#: admin/class-pick-pack-admin.php:452 admin/partials/admin-settings.inc.php:88
+msgid "6 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:273 admin/class-pick-pack-admin.php:330
+#: admin/class-pick-pack-admin.php:453 admin/partials/admin-settings.inc.php:89
+msgid "7 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:274 admin/class-pick-pack-admin.php:331
+#: admin/class-pick-pack-admin.php:454 admin/partials/admin-settings.inc.php:90
+msgid "8 points"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:275 admin/class-pick-pack-admin.php:332
+#: admin/class-pick-pack-admin.php:455 admin/partials/admin-settings.inc.php:91
+msgid "9 points"
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:76
+msgid "<strong>%d</strong> bag"
+msgid_plural "<strong>%d</strong> bags"
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-pick-pack-admin.php:669
+msgid "<strong>Pick Pack</strong> product has been created."
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:191
 msgid ""
-"As a thank you for using the PickPack service, the online store where you "
-"are shopping will offer you 10% off your next order*."
+"<strong>Pick Pack</strong> requires <strong>WooCommerce</strong> plugin to "
+"be active. Please activate it to continue."
 msgstr ""
 
-#: pick-pack-public-popup.php:46
+#: admin/class-pick-pack-admin.php:193
+msgid "Activate WooCommerce"
+msgstr ""
+
+#: public/partials/cart.inc.php:17
+msgid "Add Eco Bag"
+msgstr ""
+
+#: public/partials/popup.inc.php:40
+msgid "Close"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:139
+#: admin/partials/admin-settings.inc.php:174
+msgid "Content"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:102 admin/partials/admin-header.inc.php:21
+msgid "Dashboard"
+msgstr ""
+
+#: admin/partials/admin-orders.inc.php:21
+msgid "Date"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:382 admin/class-pick-pack-admin.php:507
+msgid "Default"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:434 admin/class-pick-pack-admin.php:446
+msgid "Default (primary category value)"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:81
+msgid "Default Points for Products"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:388 admin/class-pick-pack-admin.php:513
+msgid "Disabled"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:385 admin/class-pick-pack-admin.php:510
+msgid "Enabled"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:228
+#: admin/partials/admin-settings.inc.php:260
+#: admin/partials/admin-settings.inc.php:292
+msgid "Error, please retry!"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:108
+msgid "Exclusive PickPack products"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:436 admin/class-pick-pack-admin.php:516
+msgid "Fragile Product"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:257 admin/class-pick-pack-admin.php:312
+#: admin/class-pick-pack-admin.php:391
+msgid "Fragile Products"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:135
+#: admin/partials/admin-settings.inc.php:170
+msgid "Header"
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:61
+msgid "Here's what's happening in your store today"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:143
+#: admin/partials/admin-settings.inc.php:178 public/partials/popup.inc.php:55
+msgid "How it works"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://pick-pack.ca/"
+msgstr ""
+
+#. Description of the plugin
 msgid ""
-"The PickPack option allows you to reduce your environmental footprint by "
-"returning your packaging after receiving your package."
+"Integrate Pick Pack into your WooCommerce shop and give to your customers "
+"the option to order an ecobag on elligible products."
 msgstr ""
 
-#: pick-pack-public-popup.php:48
-msgid "TRULY be part of the environmental solution for only $3.99."
+#: admin/class-pick-pack-admin.php:437 admin/class-pick-pack-admin.php:519
+msgid "Large Product"
 msgstr ""
 
-#: pick-pack-public-popup.php:50
-msgid "The return is FREE and SIMPLE."
+#: admin/class-pick-pack-admin.php:258 admin/class-pick-pack-admin.php:313
+#: admin/class-pick-pack-admin.php:394
+msgid "Large Products"
 msgstr ""
 
-#: pick-pack-public-popup.php:52
-msgid "See the return procedure (Collaboration with Canada Post)"
+#: admin/partials/admin-dashboard.inc.php:93
+msgid "Lifetime PickPack Sales"
 msgstr ""
 
-#: pick-pack-public-popup.php:61
+#: admin/partials/admin-settings.inc.php:60
+msgid "Manage Pick Pack product."
+msgstr ""
+
+#: public/partials/popup.inc.php:48
 msgid "My order will be delivered in Canada"
 msgstr ""
 
-#: pick-pack-public-popup.php:66
-msgid "Yes, I want to make a difference."
+#: admin/partials/admin-orders.inc.php:107
+#: admin/partials/admin-orders.inc.php:117
+#: admin/partials/admin-orders.inc.php:127
+msgid "N/A"
 msgstr ""
 
-#: pick-pack-public-popup.php:68
+#: public/partials/popup.inc.php:52
 msgid "No thank you"
 msgstr ""
 
-#: pick-pack-public-popup.php:70
-msgid "Initiative powered by PickPack"
-msgstr ""
-
-#: pick-pack-public-popup.php:72
+#: admin/class-pick-pack-admin.php:472
 msgid ""
-"CONDITIONS : You must choose the PickPack option AND return your packaging "
-"as agreed."
+"Note that the large Pick Pack format has a capacity of 20 points. Thus, for "
+"every 21 points, we add a Pick Pack to the consumer's invoice."
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:21
-msgid "Pick Pack Integration"
+#: admin/partials/admin-orders.inc.php:22
+msgid "Order"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:60
-msgid "Eco Bag Price: "
+#: public/class-pick-pack-public.php:620
+msgid "Order #%d"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:66
-#, php-format
-msgid "Number of points for %s"
+#: admin/class-pick-pack-admin.php:111 admin/partials/admin-orders.inc.php:152
+#: admin/partials/admin-header.inc.php:24
+msgid "Orders"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:75
-msgid "Insert your token here that is used to add and update payment method"
+#: admin/class-pick-pack-admin.php:171
+msgid "Orders per page"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:87
-msgid "Get Token from our server"
+#. Name of the plugin
+#. Author of the plugin
+#: admin/class-pick-pack-admin.php:90 admin/class-pick-pack-admin.php:91
+#: admin/class-pick-pack-admin.php:361 admin/class-pick-pack-admin.php:416
+#: admin/class-pick-pack-admin.php:486 admin/class-pick-pack-admin.php:654
+#: admin/partials/admin-header.inc.php:18 public/partials/popup.inc.php:67
+msgid "Pick Pack"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:90
-msgid "Go to Link"
+#: admin/class-pick-pack-admin.php:101
+msgid "Pick Pack Dashboard"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:121
-msgid "Number of Eco Bags sold"
+#: admin/class-pick-pack-admin.php:259 admin/class-pick-pack-admin.php:314
+#: admin/class-pick-pack-admin.php:438
+msgid "Pick Pack Disabled"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:126
-msgid "Large Products: "
+#: public/partials/popup.inc.php:38
+msgid "Pick Pack Eco Bag"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:133
-msgid "Fragile Products: "
+#: admin/class-pick-pack-admin.php:256 admin/class-pick-pack-admin.php:311
+#: admin/class-pick-pack-admin.php:435
+msgid "Pick Pack Enabled"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:142
-msgid "Set up Payment Details"
+#: public/class-pick-pack-public.php:546
+msgid ""
+"Pick Pack option is only available in Canada and depending on the products "
+"being bought."
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:146
-msgid "Register Payment Method"
+#: admin/class-pick-pack-admin.php:745 admin/class-pick-pack-admin.php:757
+msgid "Pick Pack Order"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:150
-msgid "Update Payment Details"
+#: admin/class-pick-pack-admin.php:110 admin/class-pick-pack-admin.php:744
+msgid "Pick Pack Orders"
 msgstr ""
 
-#: partials/pick-pack-admin-integration.php:155
-msgid "Update Payment Method"
+#: admin/partials/admin-header.inc.php:14
+msgid "Pick Pack Packaging"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Alberta is 5%"
+#: admin/class-pick-pack-admin.php:469
+msgid "Pick Pack Points"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in British Columbia is 12%"
+#: admin/class-pick-pack-admin.php:253 admin/class-pick-pack-admin.php:307
+msgid "Pick Pack Products Type"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Manitoba is 13%"
+#: admin/class-pick-pack-admin.php:120
+msgid "Pick Pack Settings"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in New Brunswick is 13%"
+#: admin/partials/admin-orders.inc.php:23
+msgid "Pick Pack Solds"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Newfoundland and Labrador is 13%"
+#: admin/class-pick-pack-admin.php:444
+msgid ""
+"Pick Packs are compatible with non-fragile products only. In addition, "
+"certain products that are too large cannot be delivered in a Pick Pack."
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Northwest Territories is 5%"
+#: admin/class-pick-pack-admin.php:261 admin/class-pick-pack-admin.php:316
+msgid ""
+"Pick Packs are compatible with non-fragile products only. In addition, "
+"certain products that are too large cannot be delivered in a Pick Pack. To "
+"improve your customers' experience, please add these tags to products not "
+"eligible for Pick Pack delivery: fragile or large."
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Nova Scotia is 15%"
+#: admin/partials/admin-dashboard.inc.php:73
+msgid "PickPack solds today"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Nunavut is 5%"
+#: admin/partials/admin-settings.inc.php:207
+#: admin/partials/admin-settings.inc.php:242
+#: admin/partials/admin-settings.inc.php:274
+msgid "Please wait ..."
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Ontario is 13%"
+#: admin/partials/admin-settings.inc.php:164
+msgid "Popup content in English"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Prince Edward Island is 14%"
+#: admin/partials/admin-settings.inc.php:129
+msgid "Popup content in French"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Quebec is 14.975%"
+#: admin/partials/admin-orders.inc.php:24
+#: admin/partials/admin-settings.inc.php:73
+msgid "Price per Bag"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Saskatchewan is 10%"
+#: admin/partials/admin-settings.inc.php:69
+msgid "Product Name in English"
 msgstr ""
 
-#: class-pick-pack-public.php:115
-msgid "Tax rate in Yukon Territory is 5%"
+#: admin/partials/admin-settings.inc.php:65
+msgid "Product Name in French"
 msgstr ""
 
-#: class-pick-pack-public.php:145
-#, php-format
-msgid "%s is a fragile product"
+#: admin/partials/admin-settings.inc.php:59
+msgid "Product Options"
 msgstr ""
 
-#: class-pick-pack-public.php:149
-#, php-format
-msgid "%s is a large product"
+#: admin/class-pick-pack-admin.php:441
+msgid "Product Type"
 msgstr ""
 
-#: class-pick-pack-public.php:641
-msgid "Pick Pack bag option only available in Canada"
+#: admin/partials/admin-settings.inc.php:114
+#: admin/partials/admin-settings.inc.php:149
+#: admin/partials/admin-settings.inc.php:184
+msgid "Save Changes"
+msgstr ""
+
+#: public/partials/popup.inc.php:59
+msgid "See the return procedure (collaboration with Canada Post)"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:121 admin/partials/admin-settings.inc.php:52
+#: admin/partials/admin-header.inc.php:27
+msgid "Settings"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:77
+msgid "Stock Quantity"
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:85
+msgid ""
+"This is where the change begins for REAL! Thanks to this new application in "
+"your store, you will be able to see the PickPack effect on your consumers in "
+"real time. We congratulate you on this download and we wish you the GREATEST "
+"success in your e-com ecological transition."
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:102
+msgid "This month's PickPack sales"
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:111
+msgid "This year's PickPack sales"
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:288 admin/class-pick-pack-admin.php:345
+msgid ""
+"To make Pick Packs more compatible with your products, please add points to "
+"each product category so we can manage quantities and spaces correctly. Note "
+"that the large Pick Pack format has a capacity of 20 points. Thus, for every "
+"21 points, we add a Pick Pack to the consumer's invoice."
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:104
+msgid ""
+"To make Pick Packs more compatible with your products, please add points to "
+"each product category so we can manage quantities and spaces correctly. You "
+"can also set points directly in each product. Note that the large Pick Pack "
+"format has a capacity of 20 points. Thus, for every 21 points, we add a Pick "
+"Pack to the consumer's invoice."
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:65
+msgid "Today's sales"
+msgstr ""
+
+#: admin/partials/admin-orders.inc.php:25
+msgid "Total Paid"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:224
+#: admin/partials/admin-settings.inc.php:256
+#: admin/partials/admin-settings.inc.php:288
+msgid "Updated."
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:255 admin/class-pick-pack-admin.php:266
+#: admin/class-pick-pack-admin.php:310 admin/class-pick-pack-admin.php:323
+msgid "Use default value"
+msgstr ""
+
+#: admin/partials/admin-orders.inc.php:105
+msgid "View Order"
+msgstr ""
+
+#: admin/partials/admin-dashboard.inc.php:82
+msgid "Welcome in the PickPack team !"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:109
+msgid ""
+"When this option is enabled, it allows you to attach the PickPack tag to the "
+"products you want delivered in PickPack. ONLY marked products can be "
+"delivered in a PickPack."
+msgstr ""
+
+#: public/partials/popup.inc.php:51
+msgid "Yes, I want to make a difference"
+msgstr ""
+
+#: admin/partials/admin-settings.inc.php:130
+#: admin/partials/admin-settings.inc.php:165
+msgid "You can customize the content of the popup."
+msgstr ""
+
+#: admin/class-pick-pack-admin.php:681
+msgid "You can't delete <strong>Pick Pack</strong> product."
 msgstr ""

@@ -48,7 +48,7 @@ if (!defined('PICK_PACK_BASENAME')) {
 }
 
 /**
- * Pick pack plugin folder name
+ * Pick pack plugin folder name.
  */
 if (!defined('PICK_PACK_FOLDER')) {
     define('PICK_PACK_FOLDER', dirname(PICK_PACK_BASENAME));
@@ -67,6 +67,35 @@ if (!defined('PICK_PACK_PATH')) {
 if (!defined('PICK_PACK_BASEURL')) {
     define('PICK_PACK_BASEURL', plugins_url(PICK_PACK_FOLDER) . '/');
 }
+
+/**
+ * Default values.
+ */
+
+define('PICK_PACK_DEFAULT_PRODUCT_NAME_FR', "Ton emballage réutilisable 🌍 Retourne ton emballage et obtiens un rabais sur ta prochaine commande!");
+define('PICK_PACK_DEFAULT_PRODUCT_NAME_EN', "Your reusable packaging 🌍 Return your packaging and get a discount on your next order!");
+define('PICK_PACK_DEFAULT_PRODUCT_PRICE', 3.99);
+define('PICK_PACK_DEFAULT_PRODUCT_POINTS', 3);
+
+define('PICK_PACK_DEFAULT_POPUP_HEADER_FR', "Tu veux utiliser un emballage réutilisable?");
+define('PICK_PACK_DEFAULT_POPUP_CONTENT_FR', "Pour te remercier de choisir cette option écologique et québécoise, tu obtiendras <strong>5$ de rabais</strong> sur ta prochaine commande.");
+define('PICK_PACK_DEFAULT_POPUP_HOWTO_FR', 
+       "<p>1. Choisis l’option <strong>OUI, JE VEUX FAIRE LA DIFFÉRENCE</strong> (supplément de 3,99$).</p>" .
+       "<p>2. Après avoir reçu ton colis, <strong>retourne l’emballage GRATUITEMENT</strong> dans n’importe quelle boîte postale ou comptoir Postes Canada.</p>".
+       "<p>3. <strong>Obtiens 5$ de rabais</strong> sur ta prochaine commande!</p>" );
+
+define('PICK_PACK_DEFAULT_POPUP_HEADER_EN', "You want to use a reusable packaging?");
+define('PICK_PACK_DEFAULT_POPUP_CONTENT_EN', "To thank you for choosing this ecological and Quebec option, you will get <strong>5$ off</strong> your next order.");
+define('PICK_PACK_DEFAULT_POPUP_HOWTO_EN',
+       "<p>1. Choose the option <strong>YES, I WANT TO MAKE A DIFFERENCE</strong> (additional 3.99$ fee).</p>" .
+       "<p>2. After receiving your package, <strong>return the packaging FOR FREE</strong> to any post office box or Canada Post counter.</p>" .
+       "<p>3. <strong>Get 5$ off</strong> on your next order!</p>" );
+
+/**
+ * Pick pack help URLs.
+ **/
+define('PICK_PACK_HELP_URL_FR', 'https://pick-pack.ca/jai-recu-un-pickpack-ancien/');
+define('PICK_PACK_HELP_URL_EN', 'https://pick-pack.ca/en/pickpack-received/');
 
 /**
  * The code that runs during plugin activation.

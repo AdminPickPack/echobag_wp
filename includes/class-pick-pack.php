@@ -74,6 +74,51 @@ class Pick_Pack
     }
 
     /**
+     * Run the loader to execute all of the hooks with WordPress.
+     *
+     * @since  1.0.0
+     * @return void
+     */
+    public function run()
+    {
+        $this->loader->run();
+    }
+
+    /**
+     * The name of the plugin used to uniquely identify it within the context of
+     * WordPress and to define internationalization functionality.
+     *
+     * @since  1.0.0
+     * @return string    The name of the plugin.
+     */
+    public function get_plugin_name()
+    {
+        return $this->plugin_name;
+    }
+
+    /**
+     * The reference to the class that orchestrates the hooks with the plugin.
+     *
+     * @since  1.0.0
+     * @return Pick_Pack_Loader    Orchestrates the hooks of the plugin.
+     */
+    public function get_loader()
+    {
+        return $this->loader;
+    }
+
+    /**
+     * Retrieve the version number of the plugin.
+     *
+     * @since  1.0.0
+     * @return string    The version number of the plugin.
+     */
+    public function get_version()
+    {
+        return $this->version;
+    }
+    
+    /**
      * Load the required dependencies for this plugin.
      *
      * Include the following files that make up the plugin:
@@ -132,6 +177,75 @@ class Pick_Pack
     {
         $plugin_i18n = new Pick_Pack_i18n();
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+    }
+    
+    /**
+     * Register all of the hooks related to the admin area functionality
+     * of the plugin.
+     *
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function define_admin_hooks()
+    {
+        $plugin_admin = new Pick_Pack_Admin($this->get_plugin_name(), $this->get_version());
+
+	// Init functions
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        $this->loader->add_action('admin_menu', $plugin_admin, 'add_admin_menu');
+        $this->loader->add_action('admin_init', $plugin_admin, 'init_woocommerce');
+	
+	// AJAX handlers
+	$this->loader->add_action('wp_ajax_update_product', $plugin_admin, 'update_product_handler');
+	$this->loader->add_action('wp_ajax_update_popup_fr', $plugin_admin, 'update_popup_fr_handler');
+	$this->loader->add_action('wp_ajax_update_popup_en', $plugin_admin, 'update_popup_en_handler');
+	
+	// Custom pick pack orders post type
+        $this->loader->add_action('init', $plugin_admin, 'custom_orders_post_type');
+        $this->loader->add_filter('manage_pickpack_orders_posts_columns', $plugin_admin, 'add_custom_columns_orders_admin');
+        $this->loader->add_action('manage_pickpack_orders_posts_custom_column', $plugin_admin, 'fill_custom_columns_orders_admin', 10, 2);
+    }
+
+    /**
+     * Register all of the hooks related to the public-facing functionality
+     * of the plugin.
+     *
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function define_public_hooks()
+    {
+        $plugin_public = new Pick_Pack_Public($this->get_plugin_name(), $this->get_version());
+
+	// Enqueue styles and scripts
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+	
+	// Hide pickpack product in front-end
+        $this->loader->add_action('pre_get_posts', $plugin_public, 'remove_bag_from_query', 20);
+        $this->loader->add_filter('woocommerce_related_products', $plugin_public, 'remove_bag_from_related_products', 10, 3);
+
+	// Woocommerce cart
+	$this->loader->add_action('woocommerce_after_cart_table', $plugin_public, 'wc_cart_pick_pack_popup', 10);
+        $this->loader->add_action('woocommerce_before_calculate_totals', $plugin_public, 'wc_cart_update_pick_pack_quantity', 20, 1);
+	$this->loader->add_filter('woocommerce_cart_item_name', $plugin_public, 'wc_cart_pick_pack_product_name', 10, 3);
+	$this->loader->add_filter('woocommerce_cart_item_quantity', $plugin_public, 'wc_cart_pick_pack_readonly_quantity', 10, 3);
+        $this->loader->add_action('woocommerce_cart_item_removed', $plugin_public, 'wc_cart_remove_item_handler', 11, 2);
+	
+	// Woocommerce checkout
+        $this->loader->add_action('woocommerce_after_checkout_form', $plugin_public, 'wc_checkout_pick_pack_popup', 20);
+        $this->loader->add_action('woocommerce_checkout_update_order_review', $plugin_public, 'wc_checkout_country_update', 10);
+        $this->loader->add_action('woocommerce_review_order_after_cart_contents', $plugin_public, 'wc_checkout_display_pick_pack_info', 20);
+        $this->loader->add_action('woocommerce_checkout_order_processed', $plugin_public, 'wc_order_processed_handler');
+        $this->loader->add_action('wp', $plugin_public, 'wc_straight_to_checkout_check');
+	$this->loader->add_filter('woocommerce_update_order_review_fragments', $plugin_public, 'wc_straight_to_checkout_handler', 10);
+	
+	// AJAX handlers
+        $this->loader->add_action('wp_ajax_pick_pack_add_to_cart', $plugin_public, 'pick_pack_add_to_cart_handler');
+        $this->loader->add_action('wp_ajax_nopriv_pick_pack_add_to_cart', $plugin_public, 'pick_pack_add_to_cart_handler');
     }
 
     /**
@@ -229,116 +343,5 @@ class Pick_Pack
     }
 
 
-    /**
-     * Register all of the hooks related to the admin area functionality
-     * of the plugin.
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    private function define_admin_hooks()
-    {
-        $plugin_admin = new Pick_Pack_Admin($this->get_plugin_name(), $this->get_version());
 
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
-        $this->loader->add_action('admin_init', $plugin_admin, 'pick_pack_check_woocommerce_is_active');
-        $this->loader->add_action('admin_init', $plugin_admin, 'add_two_categories');
-        $this->loader->add_action('admin_menu', $plugin_admin, 'pick_pack_add_admin_menu');
-        $this->loader->add_action('admin_post_pick_pack_payment', $plugin_admin, 'pick_pack_payment');
-        $this->loader->add_action('init', $plugin_admin, 'custom_post_type');
-        $this->loader->add_filter('manage_pickpackorders_posts_columns', $plugin_admin, 'add_custom_columns_orders_admin');
-        $this->loader->add_action('manage_pickpackorders_posts_custom_column', $plugin_admin, 'fill_custom_columns_orders_admin', 10, 2);
-        $this->loader->add_action('admin_post_category_form_submission', $plugin_admin, 'category_form_handler');
-        $this->loader->add_action('admin_notices', $plugin_admin, 'admin_notice_company_register_false');
-        $this->loader->add_action('wp_ajax_get_multiple_categories_product_terms', $plugin_admin, 'get_multiple_categories_product_terms_handler');
-        $this->loader->add_action('wp_ajax_nopriv_wp_ajax_get_multiple_categories_product_terms', $plugin_admin, 'get_multiple_categories_product_terms_handler');
-        $this->loader->add_action('admin_post_category_multiple_form_submission', $plugin_admin, 'multiple_category_product_form_handler');
-        $this->loader->add_action('wp_ajax_change_split_payment', $plugin_admin, 'change_split_payment_handler');
-        $this->loader->add_action('wp_ajax_nopriv_wp_ajax_change_split_payment', $plugin_admin, 'change_split_payment_handler');
-        $this->loader->add_action('admin_post_popup_text_form_submission', $plugin_admin, 'popup_text_form_handler');
-        $this->loader->add_action('admin_post_stock_form_submission', $plugin_admin, 'stock_form_handler');
-        $this->loader->add_action('admin_post_default_price_form_submission', $plugin_admin, 'default_price_form_handler');
-    }
-
-    /**
-     * Register all of the hooks related to the public-facing functionality
-     * of the plugin.
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    private function define_public_hooks()
-    {
-        $plugin_public = new Pick_Pack_Public($this->get_plugin_name(), $this->get_version());
-
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-        $this->loader->add_action('pre_get_posts', $plugin_public, 'remove_bag_from_query', 20);
-        $this->loader->add_filter('woocommerce_related_products', $plugin_public, 'filter_bag_from_related_products', 10, 3);
-        $this->loader->add_filter('woocommerce_update_order_review_fragments', $plugin_public, 'eco_bag_checkout_popup_script', 10);
-        $this->loader->add_action('woocommerce_checkout_order_processed', $plugin_public, 'checkout_pick_pack_add_tax_order', 10, 3);
-        $this->loader->add_action('woocommerce_checkout_order_processed', $plugin_public, 'order_payment_complete');
-        $this->loader->add_action('woocommerce_before_calculate_totals', $plugin_public, 'change_cart_item_quantities', 20, 1);
-        $this->loader->add_action('woocommerce_before_cart_table', $plugin_public, 'pick_pack_add_model', 10);
-        $this->loader->add_action('woocommerce_cart_item_removed', $plugin_public, 'pick_pack_remove_item_from_cart', 11, 2);
-        $this->loader->add_action('wp_ajax_pick_pack_add_to_cart_product', $plugin_public, 'pick_pack_add_to_cart_product_callback');
-        $this->loader->add_action('wp_ajax_nopriv_pick_pack_add_to_cart_product', $plugin_public, 'pick_pack_add_to_cart_product_callback');
-        $this->loader->add_action('template_redirect', $plugin_public, 'return_from_payment_method', 20);
-        $this->loader->add_action('init', $plugin_public, 'curl_webhook_receive', 20);
-        $this->loader->add_action('init', $plugin_public, 'curl_eco_bag_orders', 20);
-        $this->loader->add_action('wp', $plugin_public, 'straight_to_checkout_check');
-        $this->loader->add_action('woocommerce_checkout_update_order_review', $plugin_public, 'checkout_page_pick_pack_tax', 20);
-        $this->loader->add_action('woocommerce_checkout_update_order_review', $plugin_public, 'country_option_checkout_page', 10);
-        $this->loader->add_action('woocommerce_review_order_after_cart_contents', $plugin_public, 'display_pick_pack_info', 20);
-        $this->loader->add_action('template_redirect', $plugin_public, 'return_from_company_details', 20);
-        $this->loader->add_action('woocommerce_before_checkout_form', $plugin_public, 'checkout_popup', 20);
-    }
-
-    /**
-     * Run the loader to execute all of the hooks with WordPress.
-     *
-     * @since  1.0.0
-     * @return void
-     */
-    public function run()
-    {
-        $this->loader->run();
-    }
-
-    /**
-     * The name of the plugin used to uniquely identify it within the context of
-     * WordPress and to define internationalization functionality.
-     *
-     * @since  1.0.0
-     * @return string    The name of the plugin.
-     */
-    public function get_plugin_name()
-    {
-        return $this->plugin_name;
-    }
-
-    /**
-     * The reference to the class that orchestrates the hooks with the plugin.
-     *
-     * @since  1.0.0
-     * @return Pick_Pack_Loader    Orchestrates the hooks of the plugin.
-     */
-    public function get_loader()
-    {
-        return $this->loader;
-    }
-
-    /**
-     * Retrieve the version number of the plugin.
-     *
-     * @since  1.0.0
-     * @return string    The version number of the plugin.
-     */
-    public function get_version()
-    {
-        return $this->version;
-    }
 }
