@@ -7,9 +7,12 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @package Pick_Pack
- * @author  Pick Pack <admin@pick-pack.ca>
- * @since   1.0.0
+ * @category Plugin
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  *
  * @wordpress-plugin
  * Plugin Name:       Pick Pack
@@ -34,11 +37,6 @@ if (! defined('WPINC') ) {
  * Current plugin version. Use SemVer - https://semver.org.
  */
 define('PICK_PACK_VERSION', '1.0.0');
-
-/**
- * Pick pack API server URL.
- */
-define('PICK_PACK_SERVER', 'https://www.ecobagapplication.pick-pack.ca/wp-plugin-server/');
 
 /**
  * Pick pack plugin base name (root script).
@@ -79,17 +77,21 @@ define('PICK_PACK_DEFAULT_PRODUCT_POINTS', 3);
 
 define('PICK_PACK_DEFAULT_POPUP_HEADER_FR', "Tu veux utiliser un emballage réutilisable?");
 define('PICK_PACK_DEFAULT_POPUP_CONTENT_FR', "Pour te remercier de choisir cette option écologique et québécoise, tu obtiendras <strong>5$ de rabais</strong> sur ta prochaine commande.");
-define('PICK_PACK_DEFAULT_POPUP_HOWTO_FR', 
-       "<p>1. Choisis l’option <strong>OUI, JE VEUX FAIRE LA DIFFÉRENCE</strong> (supplément de 3,99$).</p>" .
+define(
+    'PICK_PACK_DEFAULT_POPUP_HOWTO_FR', 
+    "<p>1. Choisis l’option <strong>OUI, JE VEUX FAIRE LA DIFFÉRENCE</strong> (supplément de 3,99$).</p>" .
        "<p>2. Après avoir reçu ton colis, <strong>retourne l’emballage GRATUITEMENT</strong> dans n’importe quelle boîte postale ou comptoir Postes Canada.</p>".
-       "<p>3. <strong>Obtiens 5$ de rabais</strong> sur ta prochaine commande!</p>" );
+    "<p>3. <strong>Obtiens 5$ de rabais</strong> sur ta prochaine commande!</p>" 
+);
 
 define('PICK_PACK_DEFAULT_POPUP_HEADER_EN', "You want to use a reusable packaging?");
 define('PICK_PACK_DEFAULT_POPUP_CONTENT_EN', "To thank you for choosing this ecological and Quebec option, you will get <strong>5$ off</strong> your next order.");
-define('PICK_PACK_DEFAULT_POPUP_HOWTO_EN',
-       "<p>1. Choose the option <strong>YES, I WANT TO MAKE A DIFFERENCE</strong> (additional 3.99$ fee).</p>" .
+define(
+    'PICK_PACK_DEFAULT_POPUP_HOWTO_EN',
+    "<p>1. Choose the option <strong>YES, I WANT TO MAKE A DIFFERENCE</strong> (additional 3.99$ fee).</p>" .
        "<p>2. After receiving your package, <strong>return the packaging FOR FREE</strong> to any post office box or Canada Post counter.</p>" .
-       "<p>3. <strong>Get 5$ off</strong> on your next order!</p>" );
+    "<p>3. <strong>Get 5$ off</strong> on your next order!</p>" 
+);
 
 /**
  * Pick pack help URLs.
@@ -101,7 +103,7 @@ define('PICK_PACK_HELP_URL_EN', 'https://pick-pack.ca/en/pickpack-received/');
  * The code that runs during plugin activation.
  * This action is documented in includes/class-pick-pack-activator.php
  *
- * @since 1.0.0
+ * @since  1.0.0
  * @return void
  */
 function pick_pack_activate()
@@ -115,7 +117,7 @@ register_activation_hook(__FILE__, 'pick_pack_activate');
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-pick-pack-deactivator.php
  *
- * @since 1.0.0
+ * @since  1.0.0
  * @return void
  */
 function pick_pack_deactivate()
@@ -138,7 +140,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-pick-pack.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since 1.0.0
+ * @since  1.0.0
  * @return void
  */
 function pick_pack_run()

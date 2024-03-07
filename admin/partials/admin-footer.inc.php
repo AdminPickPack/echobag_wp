@@ -2,12 +2,16 @@
 /**
  * Admin footer for Pick Pack.
  *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/admin
- * @author     Pick Pack <admin@pick-pack.ca>
- * @since      1.0.0
+ * @category Admin
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) { 
+    exit;
+}
 ?>
 
     </div>

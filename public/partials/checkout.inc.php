@@ -2,12 +2,16 @@
 /**
  * The woocommerce checkout code for pick-pack.
  *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/public
- * @author     Pick Pack <admin@pick-pack.ca>
- * @since      1.0.0
+ * @category Public
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 // Popup
-include_once plugin_dir_path(__FILE__) . 'popup.inc.php';
+require_once plugin_dir_path(__FILE__) . 'popup.inc.php';

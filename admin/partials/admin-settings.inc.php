@@ -2,12 +2,16 @@
 /**
  * Admin settings for Pick Pack.
  *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/admin
- * @author     Pick Pack <admin@pick-pack.ca>
- * @since      1.0.0
+ * @category Admin
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 // TinyMCE Editor settings
 $default_editor_settings = array( 
@@ -146,7 +150,6 @@ $popup_howto_en = get_option('pick_pack_popup_howto_en', PICK_PACK_DEFAULT_POPUP
                     <div class="form-controls">
                         <div id="ajax_status_popup_fr" class="ajax-status"></div>
                         <div class="form-buttons">
-                            <input id="preview_popup_fr" type="button" value="<?php esc_attr_e('Preview', 'pick-pack') ?>" class="btn btn-secondary">
                             <input id="update_popup_fr" type="button" value="<?php esc_attr_e('Save Changes', 'pick-pack') ?>" class="btn btn-primary">
                         </div>
                     </div>
@@ -182,7 +185,6 @@ $popup_howto_en = get_option('pick_pack_popup_howto_en', PICK_PACK_DEFAULT_POPUP
                     <div class="form-controls">
                         <div id="ajax_status_popup_en" class="ajax-status"></div>
                         <div class="form-buttons">
-                            <input id="preview_popup_en" type="button" value="<?php esc_attr_e('Preview', 'pick-pack') ?>" class="btn btn-secondary">
                             <input id="update_popup_en" type="button" value="<?php esc_attr_e('Save Changes', 'pick-pack') ?>" class="btn btn-primary">
                         </div>
                     </div>

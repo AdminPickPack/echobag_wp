@@ -2,12 +2,16 @@
 /**
  * The pick-pack popup.
  *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/public
- * @author     Pick Pack <admin@pick-pack.ca>
- * @since      1.0.0
+ * @category Public
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 // Current language
 $current_lang = '';
@@ -55,7 +59,7 @@ if ($current_lang == 'en') {
                    <div class="pickpack-howto-toggle"><?php esc_html_e('How it works', 'pick-pack') ?></div>
                    <div class="pickpack-howto-content">
                        <?php _e($popup_howto) ?>
-                       <?php if (!empty($help_url)): ?>
+                       <?php if (!empty($help_url)) : ?>
                        <div class="pickpack-howto-help"><a href="<?php esc_attr_e($help_url) ?>" target="_blank"><?php esc_html_e('See the return procedure (collaboration with Canada Post)', 'pick-pack') ?></a></div>
                        <?php endif; ?>
                     </div>

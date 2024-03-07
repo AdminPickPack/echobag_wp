@@ -8,12 +8,16 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/includes
- * @author     Pick Pack <admin@pick-pack.ca>
- * @since      1.0.0
+ * @category Common
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 class Pick_Pack
 {
@@ -22,18 +26,20 @@ class Pick_Pack
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
      *
+     * @var Pick_Pack_Loader    $loader    Maintains and registers all hooks for the plugin.
+     * 
      * @since  1.0.0
      * @access protected
-     * @var    Pick_Pack_Loader    $loader    Maintains and registers all hooks for the plugin.
      */
     protected $loader;
 
     /**
      * The unique identifier of this plugin.
+     * 
+     * @var string    $plugin_name    The string used to uniquely identify this plugin.
      *
      * @since  1.0.0
      * @access protected
-     * @var    string    $plugin_name    The string used to uniquely identify this plugin.
      */
     protected $plugin_name;
 
@@ -54,21 +60,21 @@ class Pick_Pack
      * the public-facing side of the site.
      *
      * @since  1.0.0
+     * @access public
      * @return void
      */
     public function __construct()
     {
+        $this->plugin_name = 'pick-pack';
+    
         if (defined('PICK_PACK_VERSION')) {
             $this->version = PICK_PACK_VERSION;
         } else {
             $this->version = 'UNKNOWN';
         }
-        $this->plugin_name = 'pick-pack';
 
         $this->load_dependencies();
         $this->set_locale();
-        $this->cronjob();
-        $this->cronjob_schedules();
         $this->define_admin_hooks();
         $this->define_public_hooks();
     }
@@ -77,6 +83,7 @@ class Pick_Pack
      * Run the loader to execute all of the hooks with WordPress.
      *
      * @since  1.0.0
+     * @access public
      * @return void
      */
     public function run()
@@ -89,6 +96,8 @@ class Pick_Pack
      * WordPress and to define internationalization functionality.
      *
      * @since  1.0.0
+     * @access public
+     * 
      * @return string    The name of the plugin.
      */
     public function get_plugin_name()
@@ -100,6 +109,8 @@ class Pick_Pack
      * The reference to the class that orchestrates the hooks with the plugin.
      *
      * @since  1.0.0
+     * @access public
+     * 
      * @return Pick_Pack_Loader    Orchestrates the hooks of the plugin.
      */
     public function get_loader()
@@ -111,6 +122,8 @@ class Pick_Pack
      * Retrieve the version number of the plugin.
      *
      * @since  1.0.0
+     * @access public
+     * 
      * @return string    The version number of the plugin.
      */
     public function get_version()
@@ -191,21 +204,19 @@ class Pick_Pack
     {
         $plugin_admin = new Pick_Pack_Admin($this->get_plugin_name(), $this->get_version());
 
-	// Init functions
+        // Init functions
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('admin_menu', $plugin_admin, 'add_admin_menu');
         $this->loader->add_action('admin_init', $plugin_admin, 'init_woocommerce');
-	
-	// AJAX handlers
-	$this->loader->add_action('wp_ajax_update_product', $plugin_admin, 'update_product_handler');
-	$this->loader->add_action('wp_ajax_update_popup_fr', $plugin_admin, 'update_popup_fr_handler');
-	$this->loader->add_action('wp_ajax_update_popup_en', $plugin_admin, 'update_popup_en_handler');
-	
-	// Custom pick pack orders post type
+    
+        // AJAX handlers
+        $this->loader->add_action('wp_ajax_update_product', $plugin_admin, 'update_product_handler');
+        $this->loader->add_action('wp_ajax_update_popup_fr', $plugin_admin, 'update_popup_fr_handler');
+        $this->loader->add_action('wp_ajax_update_popup_en', $plugin_admin, 'update_popup_en_handler');
+    
+        // Custom pick pack orders post type
         $this->loader->add_action('init', $plugin_admin, 'custom_orders_post_type');
-        $this->loader->add_filter('manage_pickpack_orders_posts_columns', $plugin_admin, 'add_custom_columns_orders_admin');
-        $this->loader->add_action('manage_pickpack_orders_posts_custom_column', $plugin_admin, 'fill_custom_columns_orders_admin', 10, 2);
     }
 
     /**
@@ -220,128 +231,31 @@ class Pick_Pack
     {
         $plugin_public = new Pick_Pack_Public($this->get_plugin_name(), $this->get_version());
 
-	// Enqueue styles and scripts
+        // Enqueue styles and scripts
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-	
-	// Hide pickpack product in front-end
+    
+        // Hide pickpack product in front-end
         $this->loader->add_action('pre_get_posts', $plugin_public, 'remove_bag_from_query', 20);
         $this->loader->add_filter('woocommerce_related_products', $plugin_public, 'remove_bag_from_related_products', 10, 3);
 
-	// Woocommerce cart
-	$this->loader->add_action('woocommerce_after_cart_table', $plugin_public, 'wc_cart_pick_pack_popup', 10);
+        // Woocommerce cart
+        $this->loader->add_action('woocommerce_after_cart_table', $plugin_public, 'wc_cart_pick_pack_popup', 10);
         $this->loader->add_action('woocommerce_before_calculate_totals', $plugin_public, 'wc_cart_update_pick_pack_quantity', 20, 1);
-	$this->loader->add_filter('woocommerce_cart_item_name', $plugin_public, 'wc_cart_pick_pack_product_name', 10, 3);
-	$this->loader->add_filter('woocommerce_cart_item_quantity', $plugin_public, 'wc_cart_pick_pack_readonly_quantity', 10, 3);
+        $this->loader->add_filter('woocommerce_cart_item_name', $plugin_public, 'wc_cart_pick_pack_product_name', 10, 3);
+        $this->loader->add_filter('woocommerce_cart_item_quantity', $plugin_public, 'wc_cart_pick_pack_readonly_quantity', 10, 3);
         $this->loader->add_action('woocommerce_cart_item_removed', $plugin_public, 'wc_cart_remove_item_handler', 11, 2);
-	
-	// Woocommerce checkout
+    
+        // Woocommerce checkout
         $this->loader->add_action('woocommerce_after_checkout_form', $plugin_public, 'wc_checkout_pick_pack_popup', 20);
         $this->loader->add_action('woocommerce_checkout_update_order_review', $plugin_public, 'wc_checkout_country_update', 10);
         $this->loader->add_action('woocommerce_review_order_after_cart_contents', $plugin_public, 'wc_checkout_display_pick_pack_info', 20);
         $this->loader->add_action('woocommerce_checkout_order_processed', $plugin_public, 'wc_order_processed_handler');
         $this->loader->add_action('wp', $plugin_public, 'wc_straight_to_checkout_check');
-	$this->loader->add_filter('woocommerce_update_order_review_fragments', $plugin_public, 'wc_straight_to_checkout_handler', 10);
-	
-	// AJAX handlers
+        $this->loader->add_filter('woocommerce_update_order_review_fragments', $plugin_public, 'wc_straight_to_checkout_handler', 10);
+    
+        // AJAX handlers
         $this->loader->add_action('wp_ajax_pick_pack_add_to_cart', $plugin_public, 'pick_pack_add_to_cart_handler');
         $this->loader->add_action('wp_ajax_nopriv_pick_pack_add_to_cart', $plugin_public, 'pick_pack_add_to_cart_handler');
     }
-
-    /**
-     * Set up the cronjob
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    private function cronjob()
-    {
-        $this->loader->add_action('init', $this, 'register_monthly_charge');
-        $this->loader->add_action('monthly_charge_cronjob_action', $this, 'cronjob_function');
-    }
-
-    /**
-     * Set up cronjob schedules
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    private function cronjob_schedules()
-    {
-        $this->loader->add_filter('cron_schedules', $this, 'cron_add_monthly');
-    }
-
-    /**
-     * Set up monthly cronjob schedule
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    public function cron_add_monthly($schedules)
-    {
-        // Adds once weekly to the existing schedules.
-        $schedules['Monthly'] = array(
-        'interval' => MONTH_IN_SECONDS,
-        'display' => __('Once Monthly')
-        );
-        return $schedules;
-    }
-
-    /**
-     * Set up the cronjob
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    public function register_monthly_charge()
-    {
-        if (!wp_next_scheduled('monthly_charge_cronjob_action') && !is_bool(get_option('pick_pack_ecobag_token'))) {
-            wp_schedule_event(time() + 60, 'Monthly', 'monthly_charge_cronjob_action');
-        }
-    }
-
-    /**
-     * Function that runs on cronjob
-     *
-     * @since  1.0.0
-     * @access private
-     * @return void
-     */
-    public function cronjob_function()
-    {
-        $eco_bags_sold_array = get_option('pick_pack_ecobags_sold', array());
-        $eco_bag_token = get_option('pick_pack_ecobag_token');
-
-        if (!empty($eco_bags_sold_array) && !is_bool($eco_bag_token)) {
-            $request = new WP_Http();
-            $eco_bags_sold = 0;
-
-            foreach ($eco_bags_sold_array as $order) {
-                $order['price'] = $order['price'] + $order['price'] * 0.05 + $order['price'] * 0.09975;
-                $eco_bags_sold += $order['price'] * $order['quantity'];
-            }
-            // eco_bags_sold is the total amount to be charged
-            $body = array('eco_bags_sold' => $eco_bags_sold, 'eco_bag_token' => $eco_bag_token);
-            $url = PICK_PACK_SERVER . 'cronjob.php';
-            $response = $request->get($url, array('body' => $body));
-
-            if (isset($response->errors)) {
-                return false;
-            }
-
-            if ($response['response']['code'] === 200) {
-                $response_body = $response['body'];
-                if ($response_body == 'true') {
-                    update_option('pick_pack_ecobags_sold', array());
-                }
-            }
-        }
-    }
-
-
-
 }
