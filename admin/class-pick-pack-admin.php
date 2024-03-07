@@ -295,7 +295,7 @@ class Pick_Pack_Admin
                 <p><?php esc_html_e("Pick Packs are compatible with non-fragile products only. In addition, certain products that are too large cannot be delivered in a Pick Pack. To improve your customers' experience, please add these tags to products not eligible for Pick Pack delivery: fragile or large.", 'pick-pack') ?></p>
         </div>
         <div class="form-field">
-            <label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'your-textdomain'); ?></label>
+            <label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'pick-pack'); ?></label>
             <select name="pick_pack_product_points" id="pick_pack_product_points" class="postform" required>
                 <option value="default"><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
                 <option value="1"><?php esc_html_e("1 point (small products)", 'pick-pack'); ?></option>
@@ -355,7 +355,7 @@ class Pick_Pack_Admin
         </td>
         </tr>
         <tr class="form-field">
-            <th scope="row" valign="top"><label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'your-textdomain'); ?></label></th>
+            <th scope="row" valign="top"><label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'pick-pack'); ?></label></th>
                 <td>
                 <select name="pick_pack_product_points" id="pick_pack_product_points" class="postform" required>
                     <option value="default" <?php selected($product_points, 'default'); ?>><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
