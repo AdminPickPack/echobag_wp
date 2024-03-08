@@ -1,784 +1,998 @@
 <?php
-
-/**
- * The admin-specific functionality of the plugin.
- *
- * @link       pick-pack.ca
- * @since      1.0.0
- *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/admin
- */
-
 /**
  * The admin-specific functionality of the plugin.
  *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/admin
- * @author     Pick Pack <admin@pick-pack.ca>
+ * @category Admin
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
+if (!defined('ABSPATH')) { 
+    exit;
+}
+
 class Pick_Pack_Admin
 {
 
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
-	 */
-	private $plugin_name;
-
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
-	 */
-	private $version;
-
-	/**
-	 * A shared variable. Multiple categories products
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
-	 */
-	private $choosen_products;
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
-	 * @param      string    $version    The version of this plugin.
-	 */
-	public function __construct($plugin_name, $version)
-	{
-
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-	}
-
-	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles()
-	{
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Pick_Pack_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Pick_Pack_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pick-pack-admin.css', array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name . "-font-icon", 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css', array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name . "-bootstrap-css", 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', array(), $this->version, 'all');
-	}
-
-	/**
-	 * Register the JavaScript for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts()
-	{
-
-		wp_enqueue_media();
-		
-		wp_enqueue_script($this->plugin_name . "-bootstrap-js-2", 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/pick-pack-admin.js', array('jquery'), $this->version, false);
-
-		$taxonomy = 'product_cat';
-		$categories_all = get_categories(array('taxonomy' => $taxonomy, 'hide_empty' => false));
-		$plugin_status_array = $this->get_plugin_status();
-
-		//Remove fragile and large from list
-		foreach ($categories_all as $key => $category) {
-
-			if ($category->name == "Large Product" || $category->name == "Fragile Product") {
-				unset($categories_all[$key]);
-			}
-		}
-
-		$split_payment = get_option('eco_bag_split_payment');
-
-		$jsarray = array(
-			'categories_all' => $categories_all,
-			'ajaxurl' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('_wpnonce'),
-			'split_payment' => $split_payment,
-			'plugin_status_array' => $plugin_status_array
-		);
-
-		wp_localize_script($this->plugin_name, 'php_vars', $jsarray);
-	}
-
-	/**
-	 * Check If woocommerce plugin is active or not
-	 */
-	public function pick_pack_check_woocommerce_is_active()
-	{
+    /**
+     * The ID of this plugin.
+     *
+     * @var string    $plugin_name    The ID of this plugin.
+     * 
+     * @since  1.0.0
+     * @access protected
+     */
+    protected $plugin_name;
+
+    /**
+     * The version of this plugin.
+     *
+     * @var string    $version    The current version of this plugin.
+     * 
+     * @since  1.0.0
+     * @access protected
+     */
+    protected $version;
+
+    /**
+     * A shared variable. Multiple categories products
+     *
+     * @since  1.0.0
+     * @access protected
+     * @var    string    $version    The current version of this plugin.
+     */
+    protected $choosen_products;
+
+    /**
+     * Initialize the class and set its properties.
+     *
+     * @param string $plugin_name The name of this plugin.
+     * @param string $version     The version of this plugin.
+     * 
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function __construct($plugin_name, $version)
+    {
+
+        $this->plugin_name = $plugin_name;
+        $this->version = $version;
+    }
+
+    /**
+     * Register the stylesheets for the admin area.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function enqueue_styles()
+    {
+        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pick-pack-admin.css', array(), $this->version, 'all');
+    }
+
+    /**
+     * Register the JavaScript for the admin area.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function enqueue_scripts()
+    {
+    }
+
+    /**
+     * Add Admin menu.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function add_admin_menu()
+    {
+        add_menu_page(
+            __('Pick Pack', 'pick-pack'),
+            __('Pick Pack', 'pick-pack'),
+            'manage_woocommerce',
+            'pickpack',
+            array($this, 'display_dashboard'),
+            PICK_PACK_BASEURL . 'assets/images/pick-pack-icon.png',
+            57.9
+        );
+
+        add_submenu_page(
+            'pickpack', 
+            __('Pick Pack Dashboard', 'pick-pack'),
+            __('Dashboard', 'pick-pack'),
+            'manage_woocommerce',
+            'pickpack',
+            array($this, 'display_dashboard'),
+        );
+
+        $orders_page = add_submenu_page(
+            'pickpack',
+            __('Pick Pack Orders', 'pick-pack'),
+            __('Orders', 'pick-pack'),
+            'manage_woocommerce',
+            'pickpack_orders',
+            array($this, 'display_orders'),
+        );
+        add_action("load-{$orders_page}", array($this, 'display_orders_screen_options'));
+
+        add_submenu_page(
+            'pickpack', 
+            __('Pick Pack Settings', 'pick-pack'),
+            __('Settings', 'pick-pack'),
+            'manage_woocommerce',
+            'pickpack_settings',
+            array($this, 'display_settings'),
+        );
+    }
+    
+    /**
+     * Display pick pack admin dashboard page.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function display_dashboard()
+    {
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-header.inc.php';
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-dashboard.inc.php';
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-footer.inc.php';
+    }
+
+    
+    /**
+     * Display pick pack admin settings page.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function display_settings()
+    {
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-header.inc.php';
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-settings.inc.php';
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-footer.inc.php';
+    }
+
+    /**
+     * Display pick pack orders page.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function display_orders()
+    {
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-header.inc.php';
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-orders.inc.php';
+        include_once plugin_dir_path(__FILE__) . 'partials/admin-footer.inc.php';
+    }
+    
+    /**
+     * Add pick pack orders screen options.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function display_orders_screen_options()
+    {
+        add_filter(
+            'set_screen_option_pickpack_orders_per_page', function ($default, $option, $value) {
+                return $value; 
+            }, 10, 3
+        );
+        add_screen_option(
+            'per_page', array( 'label' => __('Orders per page', 'pick-pack'),
+                         'default' => 10,
+                         'option' => 'pickpack_orders_per_page' )
+        );
+    }
+    
+    /**
+     * Initialize pick pack in woocommerce.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function init_woocommerce()
+    {
+        // Make sure that woocommerce is active (enabled)
+        $wc_plugin = $this->get_wc_plugin_basename();
+        $wc_enabled = !empty($wc_plugin) ? is_plugin_active($wc_plugin) : false;
+        if (!$wc_enabled) {
+            add_action(
+                'admin_notices', function () {
+                    $wc_plugin = Pick_Pack_Admin::get_wc_plugin_basename();
+                    $activation_url = esc_url(wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $wc_plugin . '&amp;plugin_status=all&amp;paged=1&amp;s', 'activate-plugin_' . $wc_plugin));
+                    $message = __("<strong>Pick Pack</strong> requires <strong>WooCommerce</strong> plugin to be active. Please activate it to continue.", 'pick-pack');
+        
+                    $button_text = esc_html__('Activate WooCommerce', 'pick-pack');
+                    $button = "<p><a href='{$activation_url}' class='button-primary'>{$button_text}</a></p>";
+        
+                    printf('<div class="notice notice-error"><p>%1$s</p>%2$s</div>', $message, $button);
+        
+                    if (isset($_GET['activate'])) {
+                         unset($_GET['activate']);
+                    }
+        
+                    deactivate_plugins(PICK_PACK_BASENAME);
+                }
+            );
+            return ;
+        }
+    
+        // Add pick pack options to categories
+        $this->add_wc_category_options();
+    
+        // Add pick pack options to products
+        $this->add_wc_product_options();
+    
+        // Create custom pick pack product
+        $this->create_pick_pack_product();
+    }
+    
+    /**
+     * Get woocommerce plugin base name.
+     *
+     * @since  1.0.0
+     * @access public
+     * 
+     * @return string The woocommerce plugin base name.
+     */
+    public function get_wc_plugin_basename() 
+    {
+        static $wc_basename = null;
+        if (empty($wc_basename)) {
+            if (!function_exists('get_plugins')) {
+                include_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+            $plugins = get_plugins();
+            foreach ($plugins as $key => $data) {
+                if ($data['TextDomain'] === "woocommerce") {
+                    $wc_basename = $key;
+                    break;
+                }
+            }
+        }
+        return $wc_basename;
+    }
+
+    /**
+     * Add pick pack options to woocommerce categories.
+     *
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function add_wc_category_options() 
+    {
+        // Pick Pack options in new category page
+        add_action(
+            'product_cat_add_form_fields', function () { 
+                ?>
+        <div class="form-field">
+            <label for="pick_pack_product_type"><?php esc_html_e('Pick Pack Products Type', 'pick-pack'); ?></label>
+            <select name="pick_pack_product_type" id="pick_pack_product_type" class="postform">
+                <option value="default"><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
+                <option value="enable"><?php esc_html_e("Pick Pack Enabled", 'pick-pack'); ?></option>
+                <option value="fragile"><?php esc_html_e("Fragile Products", 'pick-pack'); ?></option>
+                <option value="large"><?php esc_html_e("Large Products", 'pick-pack'); ?></option>
+                <option value="disable"><?php esc_html_e("Pick Pack Disabled", 'pick-pack'); ?></option>
+            </select>
+                <p><?php esc_html_e("Pick Packs are compatible with non-fragile products only. In addition, certain products that are too large cannot be delivered in a Pick Pack. To improve your customers' experience, please add these tags to products not eligible for Pick Pack delivery: fragile or large.", 'pick-pack') ?></p>
+        </div>
+        <div class="form-field">
+            <label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'pick-pack'); ?></label>
+            <select name="pick_pack_product_points" id="pick_pack_product_points" class="postform" required>
+                <option value="default"><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
+                <option value="1"><?php esc_html_e("1 point (small products)", 'pick-pack'); ?></option>
+                <option value="2"><?php esc_html_e("2 points", 'pick-pack'); ?></option>
+                <option value="3"><?php esc_html_e("3 points", 'pick-pack'); ?></option>
+                <option value="4"><?php esc_html_e("4 points", 'pick-pack'); ?></option>
+                <option value="5"><?php esc_html_e("5 points", 'pick-pack'); ?></option>
+                <option value="6"><?php esc_html_e("6 points", 'pick-pack'); ?></option>
+                <option value="7"><?php esc_html_e("7 points", 'pick-pack'); ?></option>
+                <option value="8"><?php esc_html_e("8 points", 'pick-pack'); ?></option>
+                <option value="9"><?php esc_html_e("9 points", 'pick-pack'); ?></option>
+                <option value="10"><?php esc_html_e("10 points", 'pick-pack'); ?></option>
+                <option value="11"><?php esc_html_e("11 points", 'pick-pack'); ?></option>
+                <option value="12"><?php esc_html_e("12 points", 'pick-pack'); ?></option>
+                <option value="13"><?php esc_html_e("13 points", 'pick-pack'); ?></option>
+                <option value="14"><?php esc_html_e("14 points", 'pick-pack'); ?></option>
+                <option value="15"><?php esc_html_e("15 points", 'pick-pack'); ?></option>
+                <option value="16"><?php esc_html_e("16 points", 'pick-pack'); ?></option>
+                <option value="17"><?php esc_html_e("17 points", 'pick-pack'); ?></option>
+                <option value="18"><?php esc_html_e("18 points", 'pick-pack'); ?></option>
+                <option value="19"><?php esc_html_e("19 points", 'pick-pack'); ?></option>
+                <option value="20"><?php esc_html_e("20 points (large products)", 'pick-pack'); ?></option>
+            </select>
+                <p><?php esc_html_e("To make Pick Packs more compatible with your products, please add points to each product category so we can manage quantities and spaces correctly. Note that the large Pick Pack format has a capacity of 20 points. Thus, for every 21 points, we add a Pick Pack to the consumer's invoice.", 'pick-pack') ?></p>
+        </div>
+                <?php 
+            }, 5, 2
+        );
+
+        add_action(
+            'edited_product_cat', function ($term_id) {
+                $product_type   = isset($_POST['pick_pack_product_type']) ? $_POST['pick_pack_product_type'] : 'default';
+                update_term_meta($term_id, 'pick_pack_product_type', sanitize_text_field($product_type));
+        
+                $product_points = isset($_POST['pick_pack_product_points']) ? $_POST['pick_pack_product_points'] : 'default';
+                update_term_meta($term_id, 'pick_pack_product_points', sanitize_text_field($product_points));
+            }, 10, 2
+        );
+    
+        // Pick Pack options in edit category page
+        add_action(
+            'product_cat_edit_form_fields', function ($term) {
+                $product_type = get_term_meta($term->term_id, 'pick_pack_product_type', true);
+                $product_points = get_term_meta($term->term_id, 'pick_pack_product_points', true);
+                ?>
+        <tr class="form-field">
+            <th scope="row" valign="top"><label for="pick_pack_product_type"><?php esc_html_e('Pick Pack Products Type', 'pick-pack'); ?></label></th>
+        <td>
+                <select name="pick_pack_product_type" id="pick_pack_product_type" class="postform">
+                    <option value="default" <?php selected($product_type, 'default'); ?>><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
+                    <option value="enable" <?php selected($product_type, 'enable'); ?>><?php esc_html_e("Pick Pack Enabled", 'pick-pack'); ?></option>
+                    <option value="fragile" <?php selected($product_type, 'fragile'); ?>><?php esc_html_e("Fragile Products", 'pick-pack'); ?></option>
+                    <option value="large" <?php selected($product_type, 'large'); ?>><?php esc_html_e("Large Products", 'pick-pack'); ?></option>
+                    <option value="disable" <?php selected($product_type, 'disable'); ?>><?php esc_html_e("Pick Pack Disabled", 'pick-pack'); ?></option>
+                </select>
+                    <p><?php esc_html_e("Pick Packs are compatible with non-fragile products only. In addition, certain products that are too large cannot be delivered in a Pick Pack. To improve your customers' experience, please add these tags to products not eligible for Pick Pack delivery: fragile or large.", 'pick-pack') ?></p>
+        </td>
+        </tr>
+        <tr class="form-field">
+            <th scope="row" valign="top"><label for="pick_pack_product_points"><?php esc_html_e('Pick Pack Products Points', 'pick-pack'); ?></label></th>
+                <td>
+                <select name="pick_pack_product_points" id="pick_pack_product_points" class="postform" required>
+                    <option value="default" <?php selected($product_points, 'default'); ?>><?php esc_html_e("Use default value", 'pick-pack'); ?></option>
+                    <option value="1" <?php selected($product_points, '1'); ?>><?php esc_html_e("1 point (small product)", 'pick-pack'); ?></option>
+                    <option value="2" <?php selected($product_points, '2'); ?>><?php esc_html_e("2 points", 'pick-pack'); ?></option>
+                    <option value="3" <?php selected($product_points, '3'); ?>><?php esc_html_e("3 points", 'pick-pack'); ?></option>
+                    <option value="4" <?php selected($product_points, '4'); ?>><?php esc_html_e("4 points", 'pick-pack'); ?></option>
+                    <option value="5" <?php selected($product_points, '5'); ?>><?php esc_html_e("5 points", 'pick-pack'); ?></option>
+                    <option value="6" <?php selected($product_points, '6'); ?>><?php esc_html_e("6 points", 'pick-pack'); ?></option>
+                    <option value="7" <?php selected($product_points, '7'); ?>><?php esc_html_e("7 points", 'pick-pack'); ?></option>
+                    <option value="8" <?php selected($product_points, '8'); ?>><?php esc_html_e("8 points", 'pick-pack'); ?></option>
+                    <option value="9" <?php selected($product_points, '9'); ?>><?php esc_html_e("9 points", 'pick-pack'); ?></option>
+                    <option value="10" <?php selected($product_points, '10'); ?>><?php esc_html_e("10 points", 'pick-pack'); ?></option>
+                    <option value="11" <?php selected($product_points, '11'); ?>><?php esc_html_e("11 points", 'pick-pack'); ?></option>
+                    <option value="12" <?php selected($product_points, '12'); ?>><?php esc_html_e("12 points", 'pick-pack'); ?></option>
+                    <option value="13" <?php selected($product_points, '13'); ?>><?php esc_html_e("13 points", 'pick-pack'); ?></option>
+                    <option value="14" <?php selected($product_points, '14'); ?>><?php esc_html_e("14 points", 'pick-pack'); ?></option>
+                    <option value="15" <?php selected($product_points, '15'); ?>><?php esc_html_e("15 points", 'pick-pack'); ?></option>
+                    <option value="16" <?php selected($product_points, '16'); ?>><?php esc_html_e("16 points", 'pick-pack'); ?></option>
+                    <option value="17" <?php selected($product_points, '17'); ?>><?php esc_html_e("17 points", 'pick-pack'); ?></option>
+                    <option value="18" <?php selected($product_points, '18'); ?>><?php esc_html_e("18 points", 'pick-pack'); ?></option>
+                    <option value="19" <?php selected($product_points, '19'); ?>><?php esc_html_e("19 points", 'pick-pack'); ?></option>
+                    <option value="20" <?php selected($product_points, '20'); ?>><?php esc_html_e("20 points (large product)", 'pick-pack'); ?></option>
+                </select>
+                    <p><?php esc_html_e("To make Pick Packs more compatible with your products, please add points to each product category so we can manage quantities and spaces correctly. Note that the large Pick Pack format has a capacity of 20 points. Thus, for every 21 points, we add a Pick Pack to the consumer's invoice.", 'pick-pack') ?></p>
+        </td>
+        </tr>
+                <?php
+            }, 5, 2
+        );
+
+        add_action(
+            'create_product_cat', function ($term_id) {
+                $product_type   = isset($_POST['pick_pack_product_type']) ? $_POST['pick_pack_product_type'] : 'default';
+                update_term_meta($term_id, 'pick_pack_product_type', sanitize_text_field($product_type));
+        
+                $product_points = isset($_POST['pick_pack_product_points']) ? $_POST['pick_pack_product_points'] : 'default';
+                update_term_meta($term_id, 'pick_pack_product_points', sanitize_text_field($product_points));
+            }, 10, 2
+        );
+
+        // Display pick pack options in categories list
+        add_filter(
+            'manage_edit-product_cat_columns', function ($columns) {
+                $columns['pick_pack'] = __("Pick Pack", 'pick-pack');
+                return $columns;
+            }, 10, 1
+        );
+        add_action('manage_product_cat_custom_column', array($this, 'show_custom_wc_category_column'), 10, 3);
+    }
+    
+    /**
+     * Show custom woocommerce category column for pickpack.
+     *
+     * @param string $content     The content.
+     * @param string $column_name The column name.
+     * @param int    $term_id     The term id.
+     * 
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function show_custom_wc_category_column($content, $column_name, $term_id)
+    {
+        if ($column_name == 'pick_pack') {
+            $product_options = $this->get_wc_category_pickpack_options($term_id);
+            $product_type = $product_options['product_type'];
+            $product_points = $product_options['product_points'];
+        
+            $content = '';
+            switch ($product_type) {
+            default:
+                $content = __('Default', 'pick-pack');
+                break;
+            case 'enable':
+                $content = __('Enabled', 'pick-pack');
+                break;
+            case 'disable':
+                $content = __('Disabled', 'pick-pack');
+                break;
+            case 'fragile':
+                $content = __('Fragile Products', 'pick-pack');
+                break;
+            case 'large':
+                $content = __('Large Products', 'pick-pack');
+                break;
+            }
+        
+            if ($product_points != 'default' && in_array($product_type, array('', 'default', 'enable'))) {
+                $product_points = intval($product_points);
+                $content .= ' ' . sprintf(_n('(%d point)', '(%d points)', $product_points, 'pick-pack'), $product_points);
+            }
+        }
+        return $content;
+    }
+
+    /**
+     * Add pick pack options to woocommerce products.
+     *
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function add_wc_product_options()
+    {
+        // Pick Pack tab in products
+        add_filter(
+            'woocommerce_product_data_tabs', function ($tabs) {
+                $tabs['pick_pack'] = array( 'label'  => __('Pick Pack', 'pick-pack'),
+                'target' => 'pick_pack_product_data' );
+                return $tabs;
+            }, 50, 1
+        );
+
+        add_action(
+            'admin_head', function () {
+                echo sprintf(
+                    '<style>#woocommerce-product-data ul.wc-tabs li.pick_pack_options a::before {' .
+                    ' display: inline-block; width: 13px; height: 13px; content: "";' .
+                    ' background-image: url(%s); background-size: contain; background-position: center; background-repeat: no-repeat;' .
+                    '}</style>', PICK_PACK_BASEURL . 'assets/images/pick-pack-icon.png'
+                );
+            }
+        );
+                 
+        // Pick Pack product options
+        add_action(
+            'woocommerce_product_data_panels', function () {
+                global $post;
+        
+                echo '<div id="pick_pack_product_data" class="panel woocommerce_options_panel hidden">';
+
+                $type_options = array( 'default' => __("Default (primary category value)", 'pick-pack'),
+                'enable'  => __("Pick Pack Enabled", 'pick-pack'),
+                'fragile' => __("Fragile Product", 'pick-pack'),
+                'large'   => __("Large Product", 'pick-pack'),
+                'disable' => __("Pick Pack Disabled", 'pick-pack') );
+        
+                woocommerce_wp_select(
+                    array( 'id'    => 'pick_pack_product_type',
+                    'label' => __("Product Type", 'pick-pack'),
+                    'options' => $type_options,
+                    'desc_tip' => true,
+                    'description' => __("Pick Packs are compatible with non-fragile products only. In addition, certain products that are too large cannot be delivered in a Pick Pack.", 'pick-pack') )
+                );
+    
+                $points_options = array( 'default' => __("Default (primary category value)", 'pick-pack'),
+                '1'       => __("1 point (small product)", 'pick-pack'),
+                '2'       => __("2 points", 'pick-pack'),
+                '3'       => __("3 points", 'pick-pack'),
+                '4'       => __("4 points", 'pick-pack'),
+                '5'       => __("5 points", 'pick-pack'),
+                '6'       => __("6 points", 'pick-pack'),
+                '7'       => __("7 points", 'pick-pack'),
+                '8'       => __("8 points", 'pick-pack'),
+                '9'       => __("9 points", 'pick-pack'),
+                '10'      => __("10 points", 'pick-pack'),
+                '11'      => __("11 points", 'pick-pack'),
+                '12'      => __("12 points", 'pick-pack'),
+                '13'      => __("13 points", 'pick-pack'),
+                '14'      => __("14 points", 'pick-pack'),
+                '15'      => __("15 points", 'pick-pack'),
+                '16'      => __("16 points", 'pick-pack'),
+                '17'      => __("17 points", 'pick-pack'),
+                '18'      => __("18 points", 'pick-pack'),
+                '19'      => __("19 points", 'pick-pack'),
+                '20'      => __("20 points (large product)", 'pick-pack') );
+        
+                woocommerce_wp_select(
+                    array( 'id'    => 'pick_pack_product_points',
+                    'label' => __("Pick Pack Points", 'pick-pack'),
+                    'options' => $points_options,
+                    'desc_tip' => true,
+                    'description' => __("Note that the large Pick Pack format has a capacity of 20 points. Thus, for every 21 points, we add a Pick Pack to the consumer's invoice.", 'pick-pack') )
+                );
+        
+                echo '</div>';
+            }
+        );
+    
+        add_action(
+            'woocommerce_process_product_meta', function ($post_id) {
+                $product_type   = isset($_POST['pick_pack_product_type']) ? $_POST['pick_pack_product_type'] : 'default';
+                update_post_meta($post_id, 'pick_pack_product_type', sanitize_text_field($product_type));
+        
+                $product_points = isset($_POST['pick_pack_product_points']) ? $_POST['pick_pack_product_points'] : 'default';
+                update_post_meta($post_id, 'pick_pack_product_points', sanitize_text_field($product_points));
+            }
+        );
+    
+        add_filter(
+            'manage_edit-product_columns', function ($columns) {
+                $columns['pick_pack'] = __('Pick Pack', 'pick-pack');
+                return $columns;
+            }, 10, 1
+        );
+        add_action('manage_product_posts_custom_column', array($this, 'show_custom_wc_product_column'), 10, 2);
+    }
+
+    /**
+     * Show custom woocommerce product column for pickpack.
+     *
+     * @param string $column_name The column name.
+     * @param int    $post_id     The post id.
+     * 
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function show_custom_wc_product_column($column_name, $post_id)
+    {
+        if ($column == 'pick_pack') {
+            $product_options = $this->get_wc_product_pickpack_options($post_id);
+            $product_type = $product_options['product_type'];
+            $product_points = $product_options['product_points'];
+        
+            $content = '';
+            switch ($product_type) {
+            default:
+                $content = __('Default', 'pick-pack');
+                break;
+            case 'enable':
+                $content = __('Enabled', 'pick-pack');
+                break;
+            case 'disable':
+                $content = __('Disabled', 'pick-pack');
+                break;
+            case 'fragile':
+                $content = __('Fragile Product', 'pick-pack');
+                break;
+            case 'large':
+                $content = __('Large Product', 'pick-pack');
+                break;
+            }
+        
+            if ($product_points != 'default' && in_array($product_type, array('', 'default', 'enable'))) {
+                $product_points = intval($product_points);
+                $content .= ' ' . sprintf(_n('(%d point)', '(%d points)', $product_points, 'pick-pack'), $product_points);
+            }
+            echo $content;
+        }
+    }
+    
+    /**
+     * Get default pick pack options.
+     *
+     * @since  1.0.0
+     * @access private
+     * 
+     * @return array The pick pack options.
+     */
+    private function get_default_pickpack_options()
+    {
+        static $options;
+        if (!empty($options)) {
+            return $options;
+        }
+    
+        $is_exclusive = get_option('pick_pack_product_exclusive', false);
+    
+        $product_type = $is_exclusive ? 'disable': 'enable';
+        $product_points = get_option('pick_pack_product_default_points', PICK_PACK_DEFAULT_PRODUCT_POINTS);
+    
+        $options = array( 'product_type' => $product_type,
+        'product_points' => $product_points );
+        return $options;
+    }
+    
+    /**
+     * Get category pick pack options.
+     *
+     * @param int $category_id The category id.
+     * 
+     * @since  1.0.0
+     * @access private
+     * 
+     * @return array The pick pack options.
+     */
+    private function get_wc_category_pickpack_options($category_id)
+    {
+        static $options = array();
+        if (!empty($options[$category_id])) {
+            return $options[$category_id];
+        }
+    
+        $default_options = $this->get_default_pickpack_options();
+    
+        $product_type = get_term_meta($category_id, 'pick_pack_product_type', true);
+        if (empty($product_type) || $product_type == 'default') {
+            $product_type = $default_options['product_type'];
+        }
+    
+        $product_points = get_term_meta($category_id, 'pick_pack_product_points', true);
+        if (empty($product_points) || $product_points == 'default') {
+            $product_points = $default_options['product_points'];
+        }
+    
+        $options[$category_id] = array( 'product_type' => $product_type,
+        'product_points' => $product_points );
+        return $options[$category_id];
+    }
+
+    /**
+     * Get product pick pack options.
+     *
+     * @param int $product_id The product id.
+     * 
+     * @since  1.0.0
+     * @access private
+     * 
+     * @return array The pick pack options.
+     */
+    private function get_wc_product_pickpack_options($product_id)
+    {
+        static $options = array();
+        if (!empty($options[$product_id])) {
+            return $options[$product_id];
+        }
+    
+        $product_type = get_post_meta($product_id, 'pick_pack_product_type', true);
+        if (empty($product_type)) { 
+            $product_type = 'default'; 
+        }
+
+        $product_points = get_post_meta($product_id, 'pick_pack_product_points', true);
+        if (empty($product_points)) { 
+            $product_points = 'default'; 
+        }
+
+        if ($product_type == 'default' || $product_points == 'default') {
+            $categories = get_the_terms($product_id, 'product_cat');
+            if (!empty($categories) && !is_wp_error($categories)) {
+                foreach ($categories as $term) {
+                    $category_id = $term->term_id;
+                    $category_options = $this->get_wc_category_pickpack_options($category_id);
+                    if ($product_type == 'default') {
+                        $product_type = $category_options['product_type'];
+                    }
+                    if ($product_points == 'default') {
+                        $product_points = $category_options['product_points'];
+                    }
+                }
+            }
+        }
+
+        if ($product_type == 'default' || $product_points == 'default') {
+            $default_options = $this->get_default_pickpack_options();
+            if ($product_type == 'default') {
+                $product_type = $default_options['product_type'];
+            }
+            if ($product_points == 'default') {
+                $product_points = $default_options['product_points'];
+            }
+        }
+    
+        $options[$product_id] = array( 'product_type' => $product_type,
+                       'product_points' => $product_points );
+        return $options[$product_id];
+    }
+    
+    /**
+     * Create pick pack product in woocommerce.
+     *
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function create_pick_pack_product()
+    {
+        if (!function_exists('wc_get_product')) {
+            return ;
+        }
+    
+        // Load pick pack options
+        $product_id = get_option('pick_pack_product_id');
+        $product_price = get_option('pick_pack_product_price', PICK_PACK_DEFAULT_PRODUCT_PRICE);
+        $product_stock = intval(get_option('pick_pack_product_stock', 0));
+    
+        // If a product id is available, check if product still exist in woocommerce
+        $product = !empty($product_id) ? wc_get_product($product_id) : null;
+    
+        // Create new product if doesn't exist in woocommerce
+        if (!$product) {
+            $product = new WC_Product_Simple();
+            $product->set_name(esc_html__('Pick Pack', 'pick-pack'));
+            $product->set_sku('Pick-Pack');
+            $product->set_regular_price($product_price);
+            $product->set_status('publish');
+            $product->set_manage_stock(false);
+            $product->set_stock_status('instock');
+            $product->set_catalog_visibility('hidden');
+        
+            $product_id = $product->save();
+            if (!empty($product_id)) {
+                update_post_meta($product_id, 'pick_pack_product_type', 'disable');
+                update_option('pick_pack_product_id', $product_id);
+                $this->set_pick_pack_product_image($product_id);
+        
+                add_action(
+                    'admin_notices', function () {
+                        $message = __("<strong>Pick Pack</strong> product has been created.", 'pick-pack');
+                        printf('<div class="notice notice-success"><p>%s</p></div>', $message);
+                    }
+                );
+            }
+        }
+
+        // Display warning if product is not published
+        if ($product && $product->status != 'publish') {
+            $product->set_status('publish');
+            $product->save();
+        
+            add_action(
+                'admin_notices', function () {
+                    $message = __("You can't delete <strong>Pick Pack</strong> product.", 'pick-pack');
+                    printf('<div class="notice notice-warning"><p>%s</p></div>', $message);
+                }
+            );
+        }
+    }
+    
+    /**
+     * Set pick pack product image.
+     *
+     * @param int $product_id The product id.
+     * 
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function set_pick_pack_product_image($product_id) 
+    {
+        // Make sure that product exist
+        if (!function_exists('wc_get_product') || !wc_get_product($product_id)) {
+            return ;
+        }
+
+        // Load image data
+        $image_path = PICK_PACK_PATH . 'assets/images/eco-bag-product.jpg';
+        $image_name = basename($image_path);
+        $image_data = file_get_contents($image_path);
+
+        // Create image in upload directory
+        $upload_dir = wp_upload_dir();
+        $unique_file_name = wp_unique_filename($upload_dir['path'], $image_name);
+        $filename = basename($unique_file_name);
+    
+        if (wp_mkdir_p($upload_dir['path'])) {
+            $file = $upload_dir['path'] . '/' . $filename;
+        } else {
+            $file = $upload_dir['basedir'] . '/' . $filename;
+        }
+        file_put_contents($file, $image_data);
+    
+        // Add image to attachments
+        $wp_filetype = wp_check_filetype($filename, null);
+    
+        $attachment = array( 'post_mime_type' => $wp_filetype['type'],
+                 'post_title'     => sanitize_file_name($filename),
+                 'post_content'   => '',
+                 'post_status'    => 'inherit' );
+    
+        $attach_id = wp_insert_attachment($attachment, $file);
+    
+        include_once ABSPATH . 'wp-admin/includes/image.php';
+    
+        $attach_data = wp_generate_attachment_metadata($attach_id, $file);
+        wp_update_attachment_metadata($attach_id, $attach_data);
+    
+        // Set product image
+        update_post_meta($product_id, '_thumbnail_id', $attach_id);
+    }
+
+    /**
+     * Register custom post type for pick pack orders.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function custom_orders_post_type()
+    {
+        $labels = array( 'name' => __('Pick Pack Orders', 'pick-pack'),
+        'singular_name' => __('Pick Pack Order', 'pick-pack') );
+    
+        $capabilities = array( 'create_posts'       => 'do_not_allow',
+                   'edit_posts'         => 'do_not_allow',
+                   'edit_others_posts'  => 'do_not_allow',
+                   'publish_posts'      => 'do_not_allow',
+                   'read_private_posts' => 'do_not_allow',
+                   
+                   'edit_post'          => 'do_not_allow',
+                   'read_post'          => 'do_not_allow',
+                   'delete_post'        => 'do_not_allow' );
+    
+        $args = array( 'label'    => __('Pick Pack Order', 'pick-pack'),
+               'labels'   => $labels,
+               'supports' => array(),
+               'public'   => false,
+               'show_ui'  => true,
+               'show_in_menu' => 'edit.php?post_type=pickpack_orders',
+               'show_in_admin_bar' => false,
+               'show_in_nav_menus' => false,
+               'show_in_rest' => false,
+               'can_export' => false,
+               'has_archive' => false,
+               'exclude_from_search' => true,
+               'publicly_queryable' => false,
+               'capability_type' => 'post',
+               'map_meta_cap' => false );
+    
+        register_post_type('pickpack_orders', $args);
+    }
+    
+    /**
+     * Update product data AJAX handler.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     **/
+    public function update_product_handler()
+    {
+        // Check if the current user is an admin
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('Unauthorized user.', 401);
+            exit;
+        }
+
+        // Verify nonce security
+        if (!wp_verify_nonce($_POST['nonce'], 'my_ajax_nonce')) {
+            wp_send_json_error('Nonce verification failed!', 403);
+            exit;
+        }
+
+        // Woocommerce not enabled
+        if (!function_exists('wc_get_product')) {
+            wp_send_json_error('Woocommerce not enabled!', 403);
+            exit;
+        }
+    
+        // Load pick pack product
+        $product_id = get_option('pick_pack_product_id');
+        $product = !empty($product_id) ? wc_get_product($product_id) : null;
+    
+        // Do nothing if missing product
+        if (!$product) {
+            wp_send_json_error('Missing pick pack product!', 404);
+            exit;
+        }
+    
+        // Update product data
+        $product_name_fr  = sanitize_post($_POST['name_fr']);
+        $product_name_en  = sanitize_post($_POST['name_en']);
+        $product_price    = sanitize_post($_POST['price']);
+        $product_stock    = intval(sanitize_post($_POST['stock']));
+        $default_points   = intval(sanitize_post($_POST['default_points']));
+        $is_exclusive     = !empty(intval(sanitize_post($_POST['exclusive']))) ? true : false;
+    
+        update_option('pick_pack_product_name_fr', $product_name_fr);
+        update_option('pick_pack_product_name_en', $product_name_en);
+        update_option('pick_pack_product_price', $product_price);
+        update_option('pick_pack_product_stock', $product_stock);
+        update_option('pick_pack_product_default_points', $default_points);
+        update_option('pick_pack_product_exclusive', $is_exclusive);
+    
+        $product->set_regular_price($product_price);
+        $product->set_manage_stock(true);
+        $product->set_stock_status($product_stock > 0 ? 'instock' : 'outofstock');
+        $product->set_stock_quantity($product_stock);
+        $product->save();
+    
+        // Success
+        wp_send_json_success('Success.');
+        exit;
+    }
+
+    /**
+     * Update popup data in french AJAX handler.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     **/
+    public function update_popup_fr_handler()
+    {
+        // Check if the current user is an admin
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('Unauthorized user.', 401);
+            exit;
+        }
+
+        // Verify nonce security
+        if (!wp_verify_nonce($_POST['nonce'], 'my_ajax_nonce')) {
+            wp_send_json_error('Nonce verification failed!', 403);
+            exit;
+        }
+    
+        // Update data
+        update_option('pick_pack_popup_header_fr', sanitize_post(@$_POST['header']));
+        update_option('pick_pack_popup_content_fr', sanitize_post(@$_POST['content']));
+        update_option('pick_pack_popup_howto_fr', sanitize_post(@$_POST['howto']));
+    
+        // Success
+        wp_send_json_success('Success.');
+        exit;
+    }
+
+    /**
+     * Update popup data in english AJAX handler.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     **/
+    public function update_popup_en_handler()
+    {
+        // Check if the current user is an admin
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('Unauthorized user.', 401);
+            exit;
+        }
+
+        // Verify nonce security
+        if (!wp_verify_nonce($_POST['nonce'], 'my_ajax_nonce')) {
+            wp_send_json_error('Nonce verification failed!', 403);
+            exit;
+        }
+    
+        // Update data
+        update_option('pick_pack_popup_header_en', sanitize_post(@$_POST['header']));
+        update_option('pick_pack_popup_content_en', sanitize_post(@$_POST['content']));
+        update_option('pick_pack_popup_howto_en', sanitize_post(@$_POST['howto']));
+    
+        // Success
+        wp_send_json_success('Success.');
+        exit;
+    }
 
-		if (!function_exists('get_plugins')) {
-			include_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-		// Get Graphina animation lite version basename
-		$basename = '';
-		$plugins = get_plugins();
-
-		foreach ($plugins as $key => $data) {
-			if ($data['TextDomain'] === "woocommerce") {
-				$basename = $key;
-			}
-		}
-
-
-		if (!is_plugin_active($basename)) {
-
-			$plugin = $basename;
-
-			$activation_url = esc_url(wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $plugin . '&amp;plugin_status=all&amp;paged=1&amp;s', 'activate-plugin_' . $plugin));
-
-			$message = '<strong>' . esc_html__(' Pick Pack ', 'pick-pack') . '</strong>' . esc_html__(' requires ', 'pick-pack') . '<strong>' . esc_html__(' WooCommerce') . '</strong>' . esc_html__(' plugin to be active. Please activate WooCommerce for Pick Pack to continue.', 'pick-pack');
-
-			$button_text = esc_html__(' Activate WooCommerce ', 'pick-pack');
-
-			$button = "<p><a href='{$activation_url}' class='button-primary'>{$button_text}</a></p>";
-
-			printf('<div class="error"><p>%1$s</p>%2$s</div>', __($message), $button);
-
-			if (isset($_GET['activate'])) unset($_GET['activate']);
-			deactivate_plugins(PICK_PACK_ROOT);
-		} else {
-
-			$this->pick_pack_create_product();
-		}
-	}
-
-	/**
-	 * Create Pick Pack Product
-	 */
-	public function pick_pack_create_product()
-	{
-
-		$id = get_option('pick_pack_product');
-		$split_payment = get_option('eco_bag_split_payment');
-		$eco_bag_price = false;
-
-		if ($split_payment) {
-			$eco_bag_price = get_option('eco_bag_price');
-		} else {
-			$eco_bag_price = get_option('eco_bag_default_price');
-		}
-
-		if (empty($id)) {
-
-			$post_args = array(
-				'post_title' => esc_html__('Pick Pack', 'pick-pack'),
-				'post_type' => 'product',
-				'post_status' => 'publish'
-			);
-
-			$post_id = wp_insert_post($post_args);
-
-			if (!empty($post_id)) {
-
-				update_option("pick_pack_product", $post_id);
-
-				if (empty($eco_bag_price)) {
-					$eco_bag_price = 3;
-				}
-
-				if (function_exists('wc_get_product')) {
-					$product = wc_get_product($post_id);
-					$product->set_sku('pick-pack-' . $post_id);
-					$product->set_regular_price($eco_bag_price);
-					$product->save();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Add Admin menu
-	 */
-	public function pick_pack_add_admin_menu()
-	{
-		add_menu_page(
-			__('Pick Pack', 'textdomain'),
-			__('Pick Pack', 'textdomain'),
-			'manage_options',
-			'pick-pack',
-			array($this, 'pick_pack_package_admin_menu_function'),
-			plugins_url('pick-pack/assets/images/pick-pack-logo.png')
-		);
-
-		add_submenu_page('pick-pack', 'Pick Pack Orders', 'Orders', 'manage_options', 'edit.php?post_type=pickpackorders');
-
-	}
-
-	public function get_plugin_status()
-	{
-
-		$eco_bag_token = get_option('eco_bag_token');
-		$temp_eco_bag_token = get_option('temp_eco_bag_token');
-		$split_payment = get_option('eco_bag_split_payment');
-		$stock = (int) get_option('eco_bag_stock');
-
-		$status_array = [
-			'split_payment_complete' => false, 'split_payment_no_payment_method' => false,
-			'split_payment_both_left' => false, 'default_payment_complete' => false,
-			'default_payment_incomplete' => false, 'stock_empty' => false
-		];
-
-		if ($split_payment) {
-			if ($eco_bag_token) {
-				$status_array['split_payment_complete'] = true;
-			} elseif ($temp_eco_bag_token) {
-				$status_array['split_payment_no_payment_method'] = true;
-			} else {
-				$status_array['split_payment_both_left'] = true;
-			}
-		} elseif ($temp_eco_bag_token) {
-			$status_array['default_payment_complete'] = true;
-		} else {
-			$status_array['default_payment_incomplete']  = true;
-		}
-
-		if ($stock === 0) {
-			$status_array['stock_empty'] = true;
-		}
-
-		return $status_array;
-	}
-
-	public function pick_pack_package_admin_menu_function()
-	{
-
-		if (!function_exists('get_plugins')) {
-			include_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-		// This check for woocommerce is not needed, the pick plugin would already be deactivated and this hook won't be called
-		$basename = '';
-		$plugins = get_plugins();
-
-		foreach ($plugins as $key => $data) {
-			if ($data['TextDomain'] === "woocommerce") {
-				$basename = $key;
-			}
-		}
-
-
-		if (is_plugin_active($basename)) {
-
-			$eco_bag_price = get_option('eco_bag_price', 3);
-			$eco_bag_default_price = get_option('eco_bag_default_price', 3);
-			$eco_bag_token = get_option("eco_bag_token", false);
-			$pick_pack_token = get_option("temp_eco_bag_token", false);
-			$taxonomy = 'product_cat';
-			$categories = get_categories(array('taxonomy' => $taxonomy, 'hide_empty' => false));
-			$popup_text = get_option('popup_text', '');
-			$popup_header = get_option('popup_header', '');
-			$stock_quantity = get_option('eco_bag_stock', -1);
-
-
-			//Remove fragile and large from list
-			foreach ($categories as $key => $category) {
-
-				if ($category->name == "Large Product" || $category->name == "Fragile Product") {
-					unset($categories[$key]);
-				}
-			}
-			// Retrieve the option values from database
-			$category_array = [];
-
-			foreach ($categories as $category) {
-
-				$category_array[] = array('category_id' => $category->term_id, 'category_value' => get_option('product_per_bag_' . $category->term_id), 'category_name' => $category->name);
-			}
-
-			$args = array(
-				'category' => array('Large Product'),
-				'orderby'  => 'name',
-			);
-			$products = wc_get_products($args);
-
-			$args_2 = array(
-				'category' => array('Fragile Product'),
-				'orderby'  => 'name',
-			);
-			$products_2 = wc_get_products($args_2);
-
-			$eco_bags_sold = get_option('eco_bags_sold', 0);
-			$eco_bags_sold_display = '';
-			$counter = 0;
-
-			if (empty($eco_bags_sold)) {
-				$eco_bags_sold_display = '<p>No ecobags orders currently</p>';
-			} else {
-				foreach ($eco_bags_sold as $index => $array) {
-
-					$eco_bags_sold_display .= '<p>' . $index . '. Price: ' . $array['price'];
-
-					$eco_bags_sold_display .= ' Quantity: ' . $array['quantity'] . '<p>';
-
-					$counter++;
-				}
-			}
-
-			$args = array(
-				'limit' => -1,
-				'orderby'  => 'name',
-			);
-			$products_3 = wc_get_products($args);
-			$multiple_categories_products = array();
-			$choosen_products = array();
-
-			foreach ($products_3 as $product) {
-
-				$product_name = $product->get_name();
-
-				if ($product_name == "Pick Pack") {
-					continue;
-				}
-
-				$category_choosen = get_post_meta($product->get_id(), 'category_selected', true);
-				if ($category_choosen) {
-					$choosen_products[] = ['id' => $product->get_id(), 'name' => $product->get_name()];
-				}
-				$terms = get_the_terms($product->get_id(), 'product_cat');
-
-				if (count($terms) > 1) {
-					$multiple_categories_products[$product->get_id()] = $product->get_name();
-
-					foreach ($terms as $term) {
-
-						if ($term->name == "Large Product" || $term->name == "Fragile Product") {
-
-							unset($multiple_categories_products[$product->get_id()]);
-							break;
-						}
-					}
-				}
-			}
-
-			require_once(plugin_dir_path(__FILE__) . 'partials/pick-pack-admin-integration.php');
-		} else {
-			echo 'Please install WooCommerce to use Pick Pack Plugin';
-		}
-	}
-
-	/**
-	 * Add the fragile and large category
-	 */
-	public function add_two_categories()
-	{
-
-		if (!function_exists('get_plugins')) {
-			include_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-		// Get Graphina animation lite version basename
-		$basename = '';
-		$plugins = get_plugins();
-
-		foreach ($plugins as $key => $data) {
-			if ($data['TextDomain'] === "woocommerce") {
-				$basename = $key;
-			}
-		}
-
-
-		if (is_plugin_active($basename)) {
-
-			$this->custom_post_type();
-
-			//Get all product categories
-			$taxonomy = 'product_cat';
-			$categories = get_categories(array('taxonomy' => $taxonomy, 'hide_empty' => false));
-			$count = 0;
-
-			//Check if fragile and large category present
-			foreach ($categories as $category) {
-
-				if ($category->name == "Large Product" || $category->name == "Fragile Product") {
-					$count++;
-				}
-			}
-
-			//Create categories if they do not exist
-			if ($count != 2) {
-				$category_id =  wp_insert_term('Large Product', $taxonomy, array('description' => "A large product not available with eco bag"));
-				$category_id_2 = wp_insert_term('Fragile Product', $taxonomy, array('description' => "A Fragile product not available with eco bag"));
-
-
-				if (is_wp_error($category_id_2) || is_wp_error($category_id)) {
-					printf('<div class="error"><p>Could not create the categories</p></div>');
-				}
-			}
-		}
-	}
-
-	/**
-	 * Post request from payment method registration and update request
-	 */
-	public function pick_pack_payment()
-	{
-
-		wp_verify_nonce($_POST['_wpnonce'], 'my-nonce');
-
-		$token = get_option('temp_eco_bag_token');
-
-		if ($token === false) {
-			$location = add_query_arg('company_register', 'false', admin_url('/admin.php?page=pick-pack'));
-			wp_redirect($location);
-			exit;
-		}
-
-		$return_url = get_home_url();
-
-		if ($_POST['token_update'] === 'true') {
-			$URL = SERVER_URL . 'index.php?eco_bag_token=' . $token . '&return_url=' . urlencode($return_url) . '&action=update';
-		} else {
-			$URL = SERVER_URL . 'index.php?eco_bag_token=' . $token . '&return_url=' . urlencode($return_url);
-		}
-
-
-		header('Location: ' . $URL);
-	}
-
-	public function custom_post_type()
-	{
-
-		register_post_type(
-			'pickpackorders',
-			// CPT Options
-			array(
-				'labels' => array(
-					'name' => __('Pick Pack Orders'),
-					'singular_name' => __('Pick Pack Order')
-				),
-				'capability_type' => 'post',
-				'supports' => array(
-					''
-
-				),
-				'capabilities' => array(
-					'create_posts' => 'do_not_allow', // Removes support for the "Add New" function ( use 'do_not_allow' instead of false for multisite set ups )
-				),
-				'map_meta_cap' => true,
-				'public' => true,
-				'has_archive' => false,
-				'rewrite' => array('slug' => 'pick-pack-orders'),
-				'show_in_menu' => 'edit.php?post_type=pickpackorders'
-			)
-		);
-	}
-
-	public function add_custom_columns_orders_admin($columns)
-	{
-		return array_merge($columns, ['price' => __('Price', 'textdomain'), 'pick_pack_bags_sold' => __('Pick Pack Bags Sold', 'textdomain')]);
-	}
-
-	public function fill_custom_columns_orders_admin($column_key, $post_id)
-	{
-
-		if ($column_key == 'price') {
-
-			$price = get_post_meta($post_id, 'price', true);
-
-			if (!$price || $price == '') {
-
-				echo '<span style="color:red;">';
-				_e('Not available', 'textdomain');
-				echo '</span>';
-			} else {
-
-				echo '<span style="color:green;">';
-				_e($price, 'textdomain');
-				echo '</span>';
-			}
-		}
-
-		if ($column_key == 'pick_pack_bags_sold') {
-
-			$eco_bags_sold = get_post_meta($post_id, 'quantity', true);
-
-			if (!$eco_bags_sold || $eco_bags_sold == '') {
-
-				echo '<span style="color:red;">';
-				_e('Not available', 'textdomain');
-				echo '</span>';
-			} else {
-
-				echo '<span style="color:green;">';
-				_e($eco_bags_sold, 'textdomain');
-				echo '</span>';
-			}
-		}
-	}
-
-	public function multiple_categories_products_callback()
-	{
-
-		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-
-			foreach ($_POST['category_selected'] as $key => $value) {
-
-				update_post_meta($key, 'category_selected', (int) $value[0]);
-
-				# code...
-			}
-		}
-
-
-
-		require_once(plugin_dir_path(__FILE__) . 'partials/multiple-categories-products-page.php');
-	}
-
-	public function category_form_handler()
-	{
-
-		wp_verify_nonce($_POST['_wpnonce'], 'my-nonce');
-		$term_ids_updated = [];
-
-
-		foreach ($_POST['categories']['name'] as $key => $term_id) {
-			if ($term_id != '' && $_POST['categories']['points'][$key] != '') {
-
-				update_option('product_per_bag_' . $term_id, $_POST['categories']['points'][$key]);
-				array_push($term_ids_updated, $term_id);
-			}
-		}
-
-		$taxonomy = 'product_cat';
-		$categories_all = get_categories(array('taxonomy' => $taxonomy, 'hide_empty' => false));
-
-		foreach ($categories_all as $key => $category) {
-
-			if ($category->name != "Large Product" && $category->name != "Fragile Product" && !in_array($category->term_id, $term_ids_updated)) {
-				if (get_option('product_per_bag_' . $category->term_id) != false) {
-					delete_option('product_per_bag_' . $category->term_id);
-				}
-			}
-		}
-
-		wp_redirect(esc_url(admin_url('/admin.php?page=pick-pack&categories-updated=1')));
-		exit;
-	}
-
-	public function admin_notice_company_register_false()
-	{
-
-		global $pagenow;
-
-		if ($pagenow == 'admin.php'  && isset($_GET['page']) && $_GET['page'] == 'pick-pack' && isset($_GET['company_register']) && $_GET['company_register'] == 'false') {
-?>
-
-			<div class="updated">
-				<p><?php esc_html_e('Company is not registered with the pick pack system', 'pick-pack'); ?></p>
-			</div>
-<?php }
-	}
-
-	public function get_multiple_categories_product_terms_handler()
-	{
-
-		$nonce = check_ajax_referer('_wpnonce', 'security');
-
-		$product_id = $_POST['product_id'];
-
-		$status = ["status" => false, "terms" => "false"];
-
-		if (!empty($product_id)) {
-
-			$terms = get_the_terms($product_id, 'product_cat');
-
-			if (!empty($terms)) {
-				$status['status'] = true;
-				$status['terms'] = $terms;
-			}
-		}
-
-		echo json_encode($status, true);
-		wp_die();
-	}
-
-	public function multiple_category_product_form_handler()
-	{
-
-		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-			wp_verify_nonce($_POST['_wpnonce'], 'my-nonce');
-			$products_ids_updated = [];
-
-			foreach ($_POST['choosen-category'] as $key => $value) {
-
-				update_post_meta($key, 'category_selected', (int) $value);
-
-				array_push($products_ids_updated, $key);
-			}
-
-			$multiple_categories_products_all = $this->get_products_multiple_categories();
-
-			foreach ($multiple_categories_products_all as $product) {
-
-				if (!in_array($product->get_id(), $products_ids_updated)) {
-					if (get_post_meta($product->get_id(), 'category_selected', true)) {
-						delete_post_meta($product->get_id(), 'category_selected');
-					}
-				}
-			}
-
-
-
-			wp_redirect(esc_url(admin_url('/admin.php?page=pick-pack&multiple-categories-products-updated=1')));
-			exit;
-		}
-	}
-
-	public function get_products_multiple_categories()
-	{
-
-
-		$args = array(
-			'limit' => -1,
-			'orderby'  => 'name',
-		);
-		$products = wc_get_products($args);
-		$multiple_categories_products = array();
-
-		foreach ($products as $product) {
-
-			$product_name = $product->get_name();
-			if ($product_name == "Pick Pack") {
-				continue;
-			}
-			$terms = get_the_terms($product->get_id(), 'product_cat');
-
-			if (count($terms) > 1) {
-				$multiple_categories_products[$product->get_id()] = $product;
-
-				foreach ($terms as $term) {
-
-					if ($term->name == "Large Product" || $term->name == "Fragile Product") {
-
-						unset($multiple_categories_products[$product->get_id()]);
-						break;
-					}
-					# code...
-				}
-			}
-		}
-
-		return $multiple_categories_products;
-	}
-
-	public function change_split_payment_handler()
-	{
-
-		$nonce = check_ajax_referer('_wpnonce', 'security');
-
-		$id = get_option('pick_pack_product');
-		$split_payment = $_POST['split_payment'];
-		$eco_bag_price = ($split_payment) ? get_option('eco_bag_price') : get_option('eco_bag_default_price');
-
-		$status = ["status" => false, "split_payment" => false, 'plugin_status_array' => []];
-
-		if ($split_payment == 'true') {
-
-			update_option('eco_bag_split_payment', true);
-			$status['split_payment'] = true;
-			$status['status'] = true;
-		} else {
-			update_option('eco_bag_split_payment', false);
-			$status['split_payment'] = false;
-			$status['status'] = true;
-		}
-
-		if ($eco_bag_price !== false) {
-			if (!empty($id)) {
-
-				$product = wc_get_product($id);
-				$product->set_regular_price($eco_bag_price);
-				$product->save();
-			}
-		}
-
-		$status['plugin_status_array'] = $this->get_plugin_status();
-
-
-
-		echo json_encode($status, true);
-		wp_die();
-	}
-
-	public function popup_text_form_handler()
-	{
-		wp_verify_nonce($_POST['_wpnonce'], 'my-nonce');
-
-		$popup_text = $_POST['popup-text'];
-		$popup_header = $_POST['popup-header'];
-
-		if (isset($popup_text)) {
-			update_option('popup_text', $popup_text);
-		}
-
-		if (isset($popup_text)) {
-			update_option('popup_header', $popup_header);
-		}
-
-		wp_redirect(esc_url(admin_url('/admin.php?page=pick-pack&popup_text_updated=1')));
-		exit;
-	}
-
-	public function stock_form_handler()
-	{
-		wp_verify_nonce($_POST['_wpnonce'], 'my-nonce');
-
-		$stock_quantity = (int) $_POST['stock-quantity'];
-
-		if (isset($stock_quantity) && $stock_quantity >= 0) {
-			update_option('eco_bag_stock', $stock_quantity);
-		}
-
-		wp_redirect(esc_url(admin_url('/admin.php?page=pick-pack&popup_text_updated=1')));
-		exit;
-	}
-
-	public function default_price_form_handler()
-	{
-		wp_verify_nonce($_POST['_wpnonce'], 'my-nonce');
-
-		$default_price = $_POST['default-price'];
-		$id = get_option('pick_pack_product');
-
-		if (isset($default_price) && $default_price >= 0) {
-			update_option('eco_bag_default_price', $default_price);
-
-			if (!empty($id)) {
-
-				$product = wc_get_product($id);
-				$product->set_regular_price($default_price);
-				$product->save();
-			}
-		}
-
-		wp_redirect(esc_url(admin_url('/admin.php?page=pick-pack&price_updated=1')));
-		exit;
-	}
 }

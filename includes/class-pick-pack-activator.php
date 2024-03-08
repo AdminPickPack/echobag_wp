@@ -1,36 +1,33 @@
 <?php
-
-/**
- * Fired during plugin activation
- *
- * @link       pick-pack.ca
- * @since      1.0.0
- *
- * @package    Pick_Pack
- * @subpackage Pick_Pack/includes
- */
-
 /**
  * Fired during plugin activation.
  *
  * This class defines all code necessary to run during the plugin's activation.
  *
- * @since      1.0.0
- * @package    Pick_Pack
- * @subpackage Pick_Pack/includes
- * @author     Pick Pack <admin@pick-pack.ca>
+ * @category Common
+ * @package  Pick_Pack
+ * @author   Pick Pack <admin@pick-pack.ca>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://pick-pack.ca/
+ * @since    1.0.0
  */
-class Pick_Pack_Activator {
+if (!defined('ABSPATH')) {
+    exit;
+}
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
+class Pick_Pack_Activator
+{
 
-	}
+    /**
+     * Plugin activation tasks.
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public static function activate()
+    {
+        // ...
+    }
 
 }
