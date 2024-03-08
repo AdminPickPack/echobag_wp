@@ -100,7 +100,7 @@ class Pick_Pack_Admin
         add_menu_page(
             __('Pick Pack', 'pick-pack'),
             __('Pick Pack', 'pick-pack'),
-            'manage_options',
+            'manage_woocommerce',
             'pickpack',
             array($this, 'display_dashboard'),
             PICK_PACK_BASEURL . 'assets/images/pick-pack-icon.png',
@@ -111,7 +111,7 @@ class Pick_Pack_Admin
             'pickpack', 
             __('Pick Pack Dashboard', 'pick-pack'),
             __('Dashboard', 'pick-pack'),
-            'manage_options',
+            'manage_woocommerce',
             'pickpack',
             array($this, 'display_dashboard'),
         );
@@ -120,7 +120,7 @@ class Pick_Pack_Admin
             'pickpack',
             __('Pick Pack Orders', 'pick-pack'),
             __('Orders', 'pick-pack'),
-            'manage_options',
+            'manage_woocommerce',
             'pickpack_orders',
             array($this, 'display_orders'),
         );
@@ -130,7 +130,7 @@ class Pick_Pack_Admin
             'pickpack', 
             __('Pick Pack Settings', 'pick-pack'),
             __('Settings', 'pick-pack'),
-            'manage_options',
+            'manage_woocommerce',
             'pickpack_settings',
             array($this, 'display_settings'),
         );
@@ -880,7 +880,7 @@ class Pick_Pack_Admin
     public function update_product_handler()
     {
         // Check if the current user is an admin
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('manage_woocommerce')) {
             wp_send_json_error('Unauthorized user.', 401);
             exit;
         }
@@ -943,7 +943,7 @@ class Pick_Pack_Admin
     public function update_popup_fr_handler()
     {
         // Check if the current user is an admin
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('manage_woocommerce')) {
             wp_send_json_error('Unauthorized user.', 401);
             exit;
         }
@@ -974,7 +974,7 @@ class Pick_Pack_Admin
     public function update_popup_en_handler()
     {
         // Check if the current user is an admin
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('manage_woocommerce')) {
             wp_send_json_error('Unauthorized user.', 401);
             exit;
         }
